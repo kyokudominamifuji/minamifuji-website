@@ -195,14 +195,14 @@ export default {
     <div class="wrap">
       <div class="section-head">
         <div><div class="eyebrow">THE STORYTELLER</div><h2 data-ja="旭堂 南不二" data-en="Kyokudo Minamifuji">旭堂 南不二</h2></div>
-        <p data-ja="高座で語り、大学でも講談を教える講談師。" data-en="A Kōdan storyteller who performs on stage and also teaches Kōdan at university.">高座で語り、大学でも講談を教える講談師。</p>
+        <p data-ja="一席一会。二つとない講談を届ける講談師。" data-en="A Kōdan storyteller creating one-of-a-kind performances.">高座で語り、大学でも講談を教える講談師。</p>
       </div>
       <div class="profile-grid">
         <div class="portrait" aria-label="旭堂南不二"></div>
         <div class="profile-copy">
           <p class="big" data-ja="静岡県富士市を拠点に活動する講談師。旭堂南左衛門に師事。上方講談協会所属。" data-en="A Kōdan storyteller based in Fuji City, Shizuoka. Disciple of Kyokudo Nanzaemon and a member of the Kamigata Kodan Association.">静岡県富士市を拠点に活動する講談師。旭堂南左衛門に師事。上方講談協会所属。</p>
           <p data-ja="一席一会。その日のお客さん、その場の笑い、その場の空気。同じ演目でも、語りは毎回変わります。いまを生きる人に届く言葉で、聴く人の明日が少し明るくなるような一席を目指しています。" data-en="Every performance is a once-only encounter. The audience, laughter and atmosphere make each telling different. Minamifuji aims to bring inherited stories to people living today, with performances that leave tomorrow a little brighter.">一席一会。その日のお客さん、その場の笑い、その場の空気。同じ演目でも、語りは毎回変わります。いまを生きる人に届く言葉で、聴く人の明日が少し明るくなるような一席を目指しています。</p>
-          <p data-ja="高座だけでなく、大学で講談を教え、講演やワークショップにも取り組んでいます。世界に向けては、英語での導入と日本語の講談、英語字幕による発信も準備しています。" data-en="Beyond the stage, he teaches Kōdan at university and offers lectures and workshops. For international audiences, he is developing performances with English introductions, Japanese Kōdan and English subtitles.">高座だけでなく、大学で講談を教え、講演やワークショップにも取り組んでいます。世界に向けては、英語での導入と日本語の講談、英語字幕による発信も準備しています。</p>
+          <p data-ja="講談会やイベントでの高座に加え、講演やワークショップにも取り組んでいます。世界に向けては、英語での導入と日本語の講談、英語字幕による発信も準備しています。" data-en="Alongside Kōdan performances, he offers talks and workshops. For international audiences, he is developing performances with English introductions, Japanese Kōdan and English subtitles.">高座だけでなく、大学で講談を教え、講演やワークショップにも取り組んでいます。世界に向けては、英語での導入と日本語の講談、英語字幕による発信も準備しています。</p>
           <div class="repertoire"><small data-ja="主な演目" data-en="SELECTED STORIES">主な演目</small><p>秀吉の初陣 ／ 秀吉と易者 ／ 黒田節の由来 ／ 左甚五郎・掛川の宿</p></div>
         </div>
       </div>
@@ -214,7 +214,7 @@ export default {
       <div>
         <div class="eyebrow">GET IN TOUCH</div>
         <h2 data-ja="あなたの街にも、\n講談を。" data-en="Bring Kōdan\nto your audience.">あなたの街にも、<br>講談を。</h2>
-        <p data-ja="講談会・イベント出演、大学・文化施設での講演、ワークショップ、取材・企画のご相談はメールでお問い合わせください。" data-en="For performances, university and cultural lectures, workshops, media and collaborations, please get in touch by email.">講談会・イベント出演、大学・文化施設での講演、ワークショップ、取材・企画のご相談はメールでお問い合わせください。</p>
+        <p data-ja="講談会・イベント出演、文化施設などでの講演、ワークショップ、取材・企画のご相談はメールでお問い合わせください。" data-en="For performances, talks at cultural venues, workshops, media and collaborations, please get in touch by email.">講談会・イベント出演、大学・文化施設での講演、ワークショップ、取材・企画のご相談はメールでお問い合わせください。</p>
         <a class="mail" href="mailto:373fuji@gmail.com">373fuji@gmail.com</a>
       </div>
       <div class="closing" data-ja="この日、この場所、この一席。\nあなたの明日を変えていく。" data-en="This day, this place, this story —\nperhaps the start of a different tomorrow.">この日、この場所、この一席。<br>あなたの明日を変えていく。</div>
