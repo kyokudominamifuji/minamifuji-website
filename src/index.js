@@ -28,12 +28,11 @@ export default {
     .navlinks{display:flex;align-items:center;gap:22px;font-size:.84rem}
     .navlinks a,.lang{color:#fff}
     .lang{border:1px solid rgba(255,255,255,.45);background:rgba(0,0,0,.12);padding:8px 12px;border-radius:99px;cursor:pointer}
-    .hero{min-height:100svh;position:relative;display:grid;align-items:end;overflow:hidden;background:#111}
-    .hero:before{content:"";position:absolute;inset:0;background:url("https://raw.githubusercontent.com/kyokudominamifuji/minamifuji-website/main/9DE0020E-0A9D-417A-B768-D430D0992E62.png") center 32%/cover no-repeat;transform:scale(1.01)}
-    .hero:after{content:"";position:absolute;inset:0;background:
-      linear-gradient(90deg,rgba(7,6,5,.82) 0%,rgba(7,6,5,.50) 38%,rgba(7,6,5,.12) 68%,rgba(7,6,5,.22) 100%),
-      linear-gradient(0deg,rgba(7,6,5,.68) 0%,rgba(7,6,5,0) 56%)}
-    .hero-inner{position:relative;z-index:2;color:#fff;padding:22vh 0 9vh}
+    .hero{min-height:100svh;position:relative;display:grid;align-items:end;overflow:hidden;background:#11100d}
+    .hero:before{content:"";position:absolute;top:0;right:0;bottom:0;left:42%;background:url("https://raw.githubusercontent.com/kyokudominamifuji/minamifuji-website/main/9DE0020E-0A9D-417A-B768-D430D0992E62.png") center 22%/cover no-repeat}
+    .hero:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#11100d 0%,#11100d 33%,rgba(17,16,13,.88) 42%,rgba(17,16,13,.22) 67%,rgba(17,16,13,.08) 100%)}
+    .hero-inner{position:relative;z-index:2;color:#fff;padding:22vh 0 9vh;max-width:1180px}
+    .hero-inner>*{max-width:560px}
     .hero-kicker{font-size:.76rem;letter-spacing:.18em;font-weight:800;margin-bottom:18px}
     .hero h1{margin:0;font-family:"Yu Mincho","Hiragino Mincho ProN",serif;font-size:clamp(3.6rem,8vw,7.4rem);line-height:.95;font-weight:500;letter-spacing:.04em}
     .hero .roman{margin-top:18px;font-family:Georgia,serif;font-size:clamp(1rem,2vw,1.5rem);letter-spacing:.14em;text-transform:uppercase}
@@ -92,8 +91,9 @@ export default {
     @media(max-width:850px){
       .nav{height:68px}.navlinks a{display:none}
       .hero-inner{padding:18vh 0 7vh}
-      .hero:before{background-position:58% center}
-      .hero:after{background:linear-gradient(0deg,rgba(7,6,5,.82) 0%,rgba(7,6,5,.18) 62%,rgba(7,6,5,.18) 100%)}
+      .hero-inner>*{max-width:none}
+      .hero:before{left:0;background-position:58% center;background-size:cover}
+      .hero:after{background:linear-gradient(0deg,rgba(7,6,5,.84) 0%,rgba(7,6,5,.22) 62%,rgba(7,6,5,.18) 100%)}
       .section-head,.kodan-grid,.profile-grid,.contact-grid{grid-template-columns:1fr}
       .section-head{gap:18px}
       .event{grid-template-columns:1fr}
