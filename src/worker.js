@@ -29,13 +29,20 @@ function weekday(dateString) {
 
 function renderEvent(e) {
   const [year, month, day] = String(e.date || "").split("-");
-  const capacityJa = String(e.capacity_ja || "").replace(/^定員\s*/, "") || "—";
-  const capacityEn = String(e.capacity_en || "").replace(/^Capacity\s*:?[ ]*/i, "") || "—";
+  const hasCapacity = Boolean(e.capacity_ja || e.capacity_en);
+  const capacityJa = String(e.capacity_ja || "").replace(/^定員\s*/, "");
+  const capacityEn = String(e.capacity_en || "").replace(/^Capacity\s*:?[ ]*/i, "");
   const reservation = e.reservation_url
     ? `<a class="reserve" href="${esc(e.reservation_url)}" target="_blank" rel="noopener noreferrer" data-ja="${esc(e.reservation_label_ja || "ご予約はこちら ↗")}" data-en="${esc(e.reservation_label_en || "Book here ↗")}">${esc(e.reservation_label_ja || "ご予約はこちら ↗")}</a>`
     : "";
   const flyer = e.flyer_url
     ? `<a class="flyer-link" href="${esc(e.flyer_url)}" target="_blank" rel="noopener noreferrer" data-ja="チラシを見る ↗" data-en="View flyer ↗">チラシを見る ↗</a>`
+    : "";
+  const capacity = hasCapacity
+    ? `<div class="fact"><small data-ja="定員" data-en="CAPACITY">定員</small><b data-ja="${esc(capacityJa)}" data-en="${esc(capacityEn || capacityJa)}">${esc(capacityJa)}</b></div>`
+    : "";
+  const program = e.program_ja
+    ? `<div class="event-program"><small data-ja="演目" data-en="PROGRAM">演目</small><p data-ja="${esc(e.program_ja)}" data-en="${esc(e.program_en || e.program_ja)}">${esc(e.program_ja)}</p></div>`
     : "";
 
   return `<article class="event" data-event-id="${esc(e.id || e.date)}">
@@ -48,8 +55,9 @@ function renderEvent(e) {
             <div class="fact"><small data-ja="会場" data-en="VENUE">会場</small><b data-ja="${esc(e.venue_ja)}" data-en="${esc(e.venue_en || e.venue_ja)}">${esc(e.venue_ja)}</b></div>
             <div class="fact"><small data-ja="時間" data-en="TIME">時間</small><b data-ja="${esc(e.time_ja)}" data-en="${esc(e.time_en || e.time_ja)}">${esc(e.time_ja)}</b></div>
             <div class="fact"><small data-ja="料金" data-en="TICKETS">料金</small><b data-ja="${esc(e.price_ja)}" data-en="${esc(e.price_en || e.price_ja)}">${esc(e.price_ja)}</b></div>
-            <div class="fact"><small data-ja="定員" data-en="CAPACITY">定員</small><b data-ja="${esc(capacityJa)}" data-en="${esc(capacityEn)}">${esc(capacityJa)}</b></div>
+            ${capacity}
           </div>
+          ${program}
           <div class="event-actions">${reservation}${flyer}</div>
         </div>
       </article>`;
@@ -106,7 +114,6 @@ export default {
 
     const fix = `
 <style id="site-runtime-fixes">
-  /* Keep the stage name together on one line across desktop/tablet widths. */
   .hero h1 {
     white-space: nowrap !important;
     max-width: none !important;
@@ -120,6 +127,26 @@ export default {
 
   .event + .event {
     border-top: 0;
+  }
+
+  .event-program {
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+  }
+
+  .event-program small {
+    display: block;
+    color: var(--muted);
+    font-size: .7rem;
+    letter-spacing: .12em;
+    margin-bottom: 8px;
+  }
+
+  .event-program p {
+    margin: 0;
+    line-height: 1.9;
+    font-size: .92rem;
   }
 
   .event-actions {
