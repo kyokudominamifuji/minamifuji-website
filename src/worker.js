@@ -1,4 +1,5 @@
 import site from "./index.js";
+import gannojiFlyer from "./flyer-gannoji-2026-10-03.js";
 
 const EVENTS_URL = "https://raw.githubusercontent.com/kyokudominamifuji/minamifuji-website/main/src/events.json";
 
@@ -35,9 +36,12 @@ function renderEvent(e) {
   const reservation = e.reservation_url
     ? `<a class="reserve" href="${esc(e.reservation_url)}" target="_blank" rel="noopener noreferrer" data-ja="${esc(e.reservation_label_ja || "ご予約はこちら ↗")}" data-en="${esc(e.reservation_label_en || "Book here ↗")}">${esc(e.reservation_label_ja || "ご予約はこちら ↗")}</a>`
     : "";
-  const flyer = e.flyer_url
-    ? `<figure class="event-flyer"><a href="${esc(e.flyer_url)}" target="_blank" rel="noopener noreferrer"><img src="${esc(e.flyer_url)}" alt="${esc(e.title_ja || "公演チラシ")}" loading="lazy"></a><figcaption data-ja="チラシをタップすると拡大できます" data-en="Tap the flyer to enlarge">チラシをタップすると拡大できます</figcaption></figure>`
+
+  const flyerSrc = e.id === "2026-10-03-gannoji-nagoya" ? gannojiFlyer : e.flyer_url;
+  const flyer = flyerSrc
+    ? `<figure class="event-flyer"><a href="${esc(flyerSrc)}" target="_blank" rel="noopener noreferrer"><img src="${esc(flyerSrc)}" alt="${esc(e.title_ja || "公演チラシ")}" loading="lazy"></a><figcaption data-ja="チラシをタップすると拡大できます" data-en="Tap the flyer to enlarge">チラシをタップすると拡大できます</figcaption></figure>`
     : "";
+
   const capacity = hasCapacity
     ? `<div class="fact"><small data-ja="定員" data-en="CAPACITY">定員</small><b data-ja="${esc(capacityJa)}" data-en="${esc(capacityEn || capacityJa)}">${esc(capacityJa)}</b></div>`
     : "";
