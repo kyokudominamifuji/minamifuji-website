@@ -36,7 +36,7 @@ function renderEvent(e) {
     ? `<a class="reserve" href="${esc(e.reservation_url)}" target="_blank" rel="noopener noreferrer" data-ja="${esc(e.reservation_label_ja || "ご予約はこちら ↗")}" data-en="${esc(e.reservation_label_en || "Book here ↗")}">${esc(e.reservation_label_ja || "ご予約はこちら ↗")}</a>`
     : "";
   const flyer = e.flyer_url
-    ? `<a class="flyer-link" href="${esc(e.flyer_url)}" target="_blank" rel="noopener noreferrer" data-ja="チラシを見る ↗" data-en="View flyer ↗">チラシを見る ↗</a>`
+    ? `<figure class="event-flyer"><a href="${esc(e.flyer_url)}" target="_blank" rel="noopener noreferrer"><img src="${esc(e.flyer_url)}" alt="${esc(e.title_ja || "公演チラシ")}" loading="lazy"></a><figcaption data-ja="チラシをタップすると拡大できます" data-en="Tap the flyer to enlarge">チラシをタップすると拡大できます</figcaption></figure>`
     : "";
   const capacity = hasCapacity
     ? `<div class="fact"><small data-ja="定員" data-en="CAPACITY">定員</small><b data-ja="${esc(capacityJa)}" data-en="${esc(capacityEn || capacityJa)}">${esc(capacityJa)}</b></div>`
@@ -58,7 +58,8 @@ function renderEvent(e) {
             ${capacity}
           </div>
           ${program}
-          <div class="event-actions">${reservation}${flyer}</div>
+          ${flyer}
+          <div class="event-actions">${reservation}</div>
         </div>
       </article>`;
 }
@@ -100,13 +101,11 @@ export default {
 
     let html = await response.text();
 
-    // Keep public-facing profile focused on the storyteller brand.
     html = html
       .replace("高座で語り、大学でも講談を教える講談師。", "一席一会。二つとない講談を届ける講談師。")
       .replace("高座だけでなく、大学で講談を教え、講演やワークショップにも取り組んでいます。世界に向けては、英語での導入と日本語の講談、英語字幕による発信も準備しています。", "講談会やイベントでの高座に加え、講演やワークショップにも取り組んでいます。世界に向けては、英語での導入と日本語の講談、英語字幕による発信も準備しています。")
       .replace("講談会・イベント出演、大学・文化施設での講演、ワークショップ、取材・企画のご相談はメールでお問い合わせください。", "講談会・イベント出演、文化施設などでの講演、ワークショップ、取材・企画のご相談はメールでお問い合わせください。");
 
-    // Replace the hard-coded schedule with events.json data.
     const eventsMarkup = await upcomingEventsMarkup();
     if (eventsMarkup) {
       html = html.replace(/<article class="event">[\s\S]*?<\/article>/, eventsMarkup);
@@ -149,6 +148,29 @@ export default {
     font-size: .92rem;
   }
 
+  .event-flyer {
+    margin: 30px 0 8px;
+    width: min(320px, 100%);
+  }
+
+  .event-flyer a {
+    display: block;
+  }
+
+  .event-flyer img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 1px solid var(--line);
+    box-shadow: 0 12px 30px rgba(0,0,0,.10);
+  }
+
+  .event-flyer figcaption {
+    margin-top: 8px;
+    color: var(--muted);
+    font-size: .72rem;
+  }
+
   .event-actions {
     display: flex;
     flex-wrap: wrap;
@@ -156,8 +178,7 @@ export default {
     margin-top: 20px;
   }
 
-  .event-actions .reserve,
-  .flyer-link {
+  .event-actions .reserve {
     margin-top: 0;
     display: inline-block;
     border-bottom: 1px solid var(--ink);
@@ -189,6 +210,9 @@ export default {
     }
     .facts {
       grid-template-columns: 1fr !important;
+    }
+    .event-flyer {
+      width: min(360px, 100%);
     }
   }
 </style>`;
