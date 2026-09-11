@@ -1,6 +1,7 @@
 import site from "./profile-photo-worker.js";
 
 const ORIGIN = "https://kyokudominamifuji.com";
+const GA_MEASUREMENT_ID = "G-YECMYPV67K";
 
 const META = {
   ja: {
@@ -79,21 +80,25 @@ function seoHead(lang) {
   <meta name="twitter:title" content="${meta.title}">
   <meta name="twitter:description" content="${meta.description}">
   <meta name="twitter:image" content="${ORIGIN}/9DE0020E-0A9D-417A-B768-D430D0992E62.png">
-  <script type="application/ld+json">${escapeJsonForHtml(graph)}</script>`;
+  <script type="application/ld+json">${escapeJsonForHtml(graph)}</script>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', '${GA_MEASUREMENT_ID}');
+  </script>`;
 }
 
 function applyEnglishServerHints(html) {
   html = html.replace(/<html\b[^>]*lang=["'][^"']*["']/i, '<html lang="en">');
-
-  // Replace simple text-only translated elements server-side. More complex nodes are
-  // completed by the small client-side pass below, so Google and users see English.
   html = html.replace(/(<([a-z][a-z0-9-]*)\b[^>]*\bdata-en="([^"]*)"[^>]*>)([^<]*)(<\/\2>)/gi,
     (match, open, tag, en, current, close) => {
       const text = en.replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&amp;/g, "&");
       return `${open}${text}${close}`;
     }
   );
-
   const englishBootstrap = `<script id="english-page-bootstrap">
   (function(){
     function applyEnglish(){
@@ -132,11 +137,8 @@ function addLanguageNavigation(html, lang) {
 
 function optimizeHtml(html, lang) {
   const meta = META[lang];
-
   html = html.replace(/<title>[\s\S]*?<\/title>/i, `<title>${meta.title}</title>`);
   html = html.replace(/<meta\s+name=["']description["'][^>]*>/i, `<meta name="description" content="${meta.description}">`);
-
-  // Correct an older local-base wording in both the visible copy and translation data.
   html = html.replaceAll(
     "静岡県富士市を拠点に活動する講談師。旭堂南左衛門に師事。上方講談協会所属。",
     "静岡県富士市出身。日本各地で高座に立つ講談師。旭堂南左衛門に師事。上方講談協会所属。"
@@ -145,7 +147,6 @@ function optimizeHtml(html, lang) {
     "A Kōdan storyteller based in Fuji City, Shizuoka. Disciple of Kyokudo Nanzaemon and a member of the Kamigata Kodan Association.",
     "A Japanese Kōdan storyteller from Fuji City, Shizuoka, performing across Japan. Disciple of Kyokudo Nanzaemon and a member of the Kamigata Kodan Association."
   );
-
   html = html.replace("</head>", seoHead(lang) + "\n</head>");
   if (lang === "en") html = applyEnglishServerHints(html);
   html = addLanguageNavigation(html, lang);
@@ -155,54 +156,29 @@ function optimizeHtml(html, lang) {
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
-
     if (url.pathname === "/robots.txt") {
-      return new Response(
-        `User-agent: *\nAllow: /\n\nSitemap: ${ORIGIN}/sitemap.xml\n`,
-        { headers: { "content-type": "text/plain; charset=UTF-8", "cache-control": "public, max-age=3600" } }
-      );
+      return new Response(`User-agent: *\nAllow: /\n\nSitemap: ${ORIGIN}/sitemap.xml\n`, { headers: { "content-type": "text/plain; charset=UTF-8", "cache-control": "public, max-age=3600" } });
     }
-
     if (url.pathname === "/sitemap.xml") {
       const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
-  <url>
-    <loc>${ORIGIN}/</loc>
-    <lastmod>2026-09-11</lastmod>
-    <xhtml:link rel="alternate" hreflang="ja" href="${ORIGIN}/" />
-    <xhtml:link rel="alternate" hreflang="en" href="${ORIGIN}/en/" />
-  </url>
-  <url>
-    <loc>${ORIGIN}/en/</loc>
-    <lastmod>2026-09-11</lastmod>
-    <xhtml:link rel="alternate" hreflang="ja" href="${ORIGIN}/" />
-    <xhtml:link rel="alternate" hreflang="en" href="${ORIGIN}/en/" />
-  </url>
+  <url><loc>${ORIGIN}/</loc><lastmod>2026-09-11</lastmod><xhtml:link rel="alternate" hreflang="ja" href="${ORIGIN}/" /><xhtml:link rel="alternate" hreflang="en" href="${ORIGIN}/en/" /></url>
+  <url><loc>${ORIGIN}/en/</loc><lastmod>2026-09-11</lastmod><xhtml:link rel="alternate" hreflang="ja" href="${ORIGIN}/" /><xhtml:link rel="alternate" hreflang="en" href="${ORIGIN}/en/" /></url>
 </urlset>`;
-      return new Response(xml, {
-        headers: { "content-type": "application/xml; charset=UTF-8", "cache-control": "public, max-age=3600" }
-      });
+      return new Response(xml, { headers: { "content-type": "application/xml; charset=UTF-8", "cache-control": "public, max-age=3600" } });
     }
-
     const lang = url.pathname === "/en" || url.pathname.startsWith("/en/") ? "en" : "ja";
     const response = await site.fetch(request, env, ctx);
     const contentType = response.headers.get("content-type") || "";
     if (!contentType.includes("text/html")) return response;
-
     let html = await response.text();
     html = optimizeHtml(html, lang);
-
     const headers = new Headers(response.headers);
     headers.delete("content-length");
     headers.set("content-language", lang);
     headers.set("x-robots-tag", "index, follow");
     headers.set("cache-control", "no-store, no-cache, must-revalidate, max-age=0");
     headers.set("x-seo-worker", "bilingual-v1");
-
-    return new Response(html, {
-      status: response.status,
-      statusText: response.statusText,
-      headers
-    });
+    return new Response(html, { status: response.status, statusText: response.statusText, headers });
   }
 };
