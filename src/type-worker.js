@@ -75,6 +75,28 @@ export default {
       .instagram-brand .instagram-handle {
         margin-bottom: 0 !important;
       }
+
+      /* Keep all typography off the photographs. Desktop: text panel left, photo right. */
+      .hero {
+        background: #11100d !important;
+      }
+      .hero:before {
+        left: 52% !important;
+        right: 0 !important;
+        width: auto !important;
+        background-position: center 22% !important;
+      }
+      .hero:after {
+        display: none !important;
+      }
+      .hero-inner > * {
+        max-width: min(520px, 42vw) !important;
+      }
+      .portrait:after {
+        display: none !important;
+        content: none !important;
+      }
+
       @media (max-width: 1100px) {
         html:lang(ja) .hero-kicker {
           font-size: clamp(2.7rem, 5.6vw, 4.2rem) !important;
@@ -84,6 +106,27 @@ export default {
         html:lang(ja) .hero-kicker {
           font-size: clamp(2.3rem, 11.5vw, 3rem) !important;
           letter-spacing: .01em !important;
+        }
+        .hero {
+          min-height: auto !important;
+          display: block !important;
+          padding-top: 68vh !important;
+        }
+        .hero:before {
+          top: 0 !important;
+          left: 0 !important;
+          right: 0 !important;
+          bottom: auto !important;
+          width: 100% !important;
+          height: 68vh !important;
+          background-position: center 20% !important;
+          background-size: cover !important;
+        }
+        .hero-inner {
+          padding: 42px 0 64px !important;
+        }
+        .hero-inner > * {
+          max-width: none !important;
         }
       }
     </style>`;
