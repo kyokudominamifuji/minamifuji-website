@@ -65,12 +65,63 @@ export default {
       html = html.replace("</main>", `${sections}\n</main>`);
     }
 
-    html = html.replace("</body>", "<!-- unified-site-worker-v1 -->\n</body>");
+    // Final live-site safeguard: if any old one-line repertoire list survives,
+    // replace it in the browser with the same detailed cards used by Taikoki.
+    const repertoireFixScript = `
+<script id="repertoire-live-fix">
+(function(){
+  function storyList(items){
+    return '<div class="story-list">' + items.map(function(item){
+      return '<div class="story-item"><h4 data-ja="' + item.jaTitle + '" data-en="' + item.enTitle + '">' + item.jaTitle + '</h4><p data-ja="' + item.jaCopy + '" data-en="' + item.enCopy + '">' + item.jaCopy + '</p></div>';
+    }).join('') + '</div>';
+  }
+
+  var groups = [
+    {
+      key:'難波戦記の発端',
+      items:[
+        {jaTitle:'難波戦記の発端',enTitle:'Opening of Nanba Senki',jaCopy:'豊臣と徳川、二つの大きな力が向き合い、大坂の陣へ。天下を揺るがす戦いの幕開けを描きます。',enCopy:'Toyotomi and Tokugawa face one another as the story moves toward the Siege of Osaka — the opening of a conflict that will shake the realm.'},
+        {jaTitle:'般若寺の焼討ち',enTitle:'The Burning of Hannya-ji',jaCopy:'戦乱の中で交錯する策と覚悟。緊迫した場面を、講談ならではのテンポで描く一席です。',enCopy:'Strategy and resolve collide amid the turmoil of war, unfolding with the tension and rhythm unique to Kodan.'},
+        {jaTitle:'平野の地雷火',enTitle:'The Mine Fire at Hirano',jaCopy:'敵を迎え撃つための奇策をめぐり、知恵と度胸がぶつかる。息をのむ展開が続く一席です。',enCopy:'A daring stratagem to meet the enemy brings wit and courage into sharp conflict in a story full of suspense.'},
+        {jaTitle:'結城中納言秀康の毒死',enTitle:'The Poison-Death Legend of Yuki Hideyasu',jaCopy:'徳川家康の次男・結城秀康をめぐる毒死の伝承。武将の生き方と、その運命に迫ります。',enCopy:'A tale built around the poison-death legend of Yuki Hideyasu, the second son of Tokugawa Ieyasu, exploring a warrior’s life and fate.'}
+      ]
+    },
+    {
+      key:'猫餅の由来',
+      items:[
+        {jaTitle:'猫餅の由来',enTitle:'The Origin of Nekomochi',jaCopy:'左甚五郎らしい機転と洒落、人情が詰まった一席。不思議な「猫餅」の由来をお楽しみください。',enCopy:'A warm and witty tale filled with Jingoro’s quick thinking, humor and humanity, revealing the curious origin of Nekomochi.'},
+        {jaTitle:'狩野探幽との出会い',enTitle:'Meeting Kano Tanyu',jaCopy:'天才彫刻師・左甚五郎と、名絵師・狩野探幽。二人の才能が出会う場面を描く物語です。',enCopy:'Legendary sculptor Hidari Jingoro meets celebrated painter Kano Tanyu — a story about the encounter of two extraordinary talents.'}
+      ]
+    },
+    {
+      key:'長屋の出世',
+      items:[
+        {jaTitle:'長屋の出世',enTitle:'Success from the Tenement',jaCopy:'長屋に暮らす人々の中から始まる、思いがけない出世物語。笑いの中に、人の縁のおもしろさが光ります。',enCopy:'An unexpected rise begins among ordinary tenement residents, with humor revealing the surprising power of human connections.'},
+        {jaTitle:'黄門と農業',enTitle:'Mito Komon and Farming',jaCopy:'諸国を巡る黄門さまが、農業を通して人々の暮らしと向き合う物語。知恵と人情を味わう一席です。',enCopy:'Mito Komon encounters people’s everyday lives through farming — a story rich in practical wisdom and humanity.'},
+        {jaTitle:'牛盗人',enTitle:'The Cattle Thief',jaCopy:'牛をめぐって巻き起こるひと騒動。笑いと人情の中に、黄門漫遊記らしい知恵と機転が光ります。',enCopy:'A commotion over a stolen cow brings out the wit, warmth and quick thinking that make the Mito Komon tales so enjoyable.'}
+      ]
+    }
+  ];
+
+  document.querySelectorAll('#repertoire .title-line').forEach(function(node){
+    var text = (node.textContent || '').replace(/\s+/g,'');
+    groups.forEach(function(group){
+      if(text.indexOf(group.key) !== -1){
+        node.outerHTML = storyList(group.items);
+      }
+    });
+  });
+})();
+</script>`;
+
+    html = html.replace("</body>", repertoireFixScript + "\n<!-- unified-site-worker-v2 -->\n</body>");
 
     const headers = new Headers(response.headers);
     headers.delete("content-length");
-    headers.set("cache-control", "public, max-age=30");
-    headers.set("x-site-worker", "unified-site-worker-v1");
+    headers.set("cache-control", "no-store, no-cache, must-revalidate, max-age=0");
+    headers.set("pragma", "no-cache");
+    headers.set("expires", "0");
+    headers.set("x-site-worker", "unified-site-worker-v2");
 
     return new Response(html, {
       status: response.status,
