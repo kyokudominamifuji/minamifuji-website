@@ -10,6 +10,10 @@ export default {
 
     let html = await response.text();
 
+    // NEWS is intentionally hidden until there are real article/detail pages.
+    html = html.replace(/<section class="news" id="news">[\s\S]*?<\/section>/, "");
+    html = html.replace('<a href="#news" data-ja="お知らせ" data-en="News">お知らせ</a>', "");
+
     const eventTagline = '<p class="tagline" data-ja="声と糸が、物語を紡ぐ。" data-en="Voice and strings weave a story.">声と糸が、物語を紡ぐ。</p>';
     const flyerOnTop = `${eventTagline}\n          <a class="event-flyer-link" href="/events/2026-11-01" aria-label="旭堂南不二・佐藤さくら子 二人会の詳細を見る"><img src="${FLYER_URL}" alt="2026年11月1日 旭堂南不二・佐藤さくら子 二人会 公演チラシ" loading="lazy"></a>`;
     html = html.replace(eventTagline, flyerOnTop);
