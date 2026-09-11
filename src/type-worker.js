@@ -10,20 +10,20 @@ export default {
 
     const typeStyle = `<style id="hero-title-size-fix">
       html:lang(ja) .hero-kicker {
-        font-size: clamp(3.2rem, 5.6vw, 5.9rem) !important;
-        line-height: .95 !important;
+        font-size: clamp(2.85rem, 5vw, 5.2rem) !important;
+        line-height: .98 !important;
         letter-spacing: .025em !important;
         font-weight: 500 !important;
-        margin-bottom: 18px !important;
+        margin-bottom: 20px !important;
       }
       @media (max-width: 1100px) {
         html:lang(ja) .hero-kicker {
-          font-size: clamp(3rem, 6.2vw, 4.7rem) !important;
+          font-size: clamp(2.7rem, 5.6vw, 4.2rem) !important;
         }
       }
       @media (max-width: 850px) {
         html:lang(ja) .hero-kicker {
-          font-size: clamp(2.65rem, 13vw, 3.45rem) !important;
+          font-size: clamp(2.3rem, 11.5vw, 3rem) !important;
           letter-spacing: .01em !important;
         }
       }
