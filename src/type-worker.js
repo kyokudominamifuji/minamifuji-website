@@ -19,6 +19,11 @@ export default {
       `<div class="flyer flyer-image"><img src="${FLYER_URL}" alt="2026年11月1日 旭堂南不二・佐藤さくら子 二人会 公演チラシ" loading="lazy"></div>`
     );
 
+    html = html.replace(
+      '<div class="instagram-handle">@373.fuji</div>',
+      `<div class="instagram-brand"><svg class="instagram-logo" viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="2.5" width="19" height="19" rx="5" ry="5" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="4.3" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="17.6" cy="6.7" r="1.15" fill="currentColor"/></svg><div class="instagram-handle">@373.fuji</div></div>`
+    );
+
     const typeStyle = `<style id="hero-title-size-fix">
       html:lang(ja) .hero-kicker {
         font-size: clamp(2.85rem, 5vw, 5.2rem) !important;
@@ -50,6 +55,21 @@ export default {
         height: auto;
         margin: 0 auto;
         box-shadow: 0 12px 34px rgba(21,19,15,.12);
+      }
+      .instagram-brand {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-bottom: 8px;
+      }
+      .instagram-logo {
+        width: clamp(34px, 4vw, 46px);
+        height: clamp(34px, 4vw, 46px);
+        flex: 0 0 auto;
+        color: var(--ink);
+      }
+      .instagram-brand .instagram-handle {
+        margin-bottom: 0 !important;
       }
       @media (max-width: 1100px) {
         html:lang(ja) .hero-kicker {
