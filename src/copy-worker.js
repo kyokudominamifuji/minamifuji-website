@@ -1,4 +1,4 @@
-import site from "./type-worker.js";
+import site from "./kodan-copy-worker.js";
 
 export default {
   async fetch(request, env, ctx) {
@@ -14,12 +14,12 @@ export default {
         '心が躍り、息をのみ、胸が熱くなる。'
       )
       .replaceAll(
-        'To laugh, to be surprised, and sometimes to feel your heart stir.',
-        'Your heart lifts, you hold your breath, and something stirs deep inside.'
+        'To laugh, to be surprised, and sometimes to feel your heart stir — while carrying the classics forward and exploring new forms of expression.',
+        'Your heart lifts, you hold your breath, and something stirs deep inside — while carrying the classics forward and exploring new forms of expression.'
       )
       .replaceAll(
-        '笑って、驚いて、<br>ときには胸が熱くなる。',
-        '心が躍り、息をのみ、<br>胸が熱くなる。'
+        'To laugh, to be surprised, and sometimes to feel your heart stir.',
+        'Your heart lifts, you hold your breath, and something stirs deep inside.'
       );
 
     const headers = new Headers(response.headers);
