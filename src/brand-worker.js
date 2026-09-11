@@ -22,6 +22,42 @@ export default {
     if (!contentType.includes("text/html")) return response;
 
     let html = await response.text();
+
+    // TOP: keep the professional title concise and let the main name carry the identity.
+    html = html
+      .replace(
+        '<div class="hero-kicker" data-ja="講談師 ／ 旭堂南不二" data-en="KŌDAN STORYTELLER / KYOKUDO MINAMIFUJI">講談師 ／ 旭堂南不二</div>',
+        '<div class="hero-kicker" data-ja="講談師" data-en="KODAN STORYTELLER">講談師</div>'
+      )
+      .replace(
+        '<h1>旭堂南不二</h1>',
+        '<h1><ruby>旭堂南不二<rt>きょくどう　みなみふじ</rt></ruby></h1>'
+      )
+      .replaceAll(
+        '一席一会。二つとない講談を届ける講談師。',
+        '高座で語り、大学でも講談を教える講談師。'
+      )
+      .replaceAll(
+        'A Kōdan storyteller creating one-of-a-kind performances.',
+        'A Kōdan storyteller who performs on stage and teaches Kōdan at university.'
+      )
+      .replaceAll(
+        '講談会やイベントでの高座に加え、講演やワークショップにも取り組んでいます。世界に向けては、英語での導入と日本語の講談、英語字幕による発信も準備しています。',
+        '高座だけでなく、大学で講談を教え、講演やワークショップにも取り組んでいます。世界に向けては、英語での導入と日本語の講談、英語字幕による発信も準備しています。'
+      )
+      .replaceAll(
+        'Alongside Kōdan performances, he offers talks and workshops. For international audiences, he is developing performances with English introductions, Japanese Kōdan and English subtitles.',
+        'Alongside performing, he teaches Kōdan at university and offers talks and workshops. For international audiences, he is developing performances with English introductions, Japanese Kōdan and English subtitles.'
+      )
+      .replaceAll(
+        '講談会・イベント出演、文化施設などでの講演、ワークショップ、取材・企画のご相談はメールでお問い合わせください。',
+        '講談会・イベント出演、大学・文化施設での講演、ワークショップ、取材・企画のご相談はメールでお問い合わせください。'
+      )
+      .replaceAll(
+        'For performances, talks at cultural venues, workshops, media and collaborations, please get in touch by email.',
+        'For performances, talks at universities and cultural venues, workshops, media and collaborations, please get in touch by email.'
+      );
+
     html = html.replace(
       '<a class="brand" href="#top"><b>旭堂 南不二</b><small>KYOKUDO MINAMIFUJI</small></a>',
       `<a class="brand brand-logo" href="#top" aria-label="旭堂南不二 ホーム"><img src="${LOGO_URL}" alt="講談師 旭堂南不二 kyokudominamifuji.com"></a>`
@@ -46,12 +82,17 @@ export default {
     const style = `<style id="brand-logo-style">
       .brand-logo{margin-right:auto;display:flex;align-items:center;width:auto!important}
       .brand-logo img{display:block;width:clamp(170px,20vw,260px);height:auto;max-height:48px;object-fit:contain;object-position:left center;filter:drop-shadow(0 1px 4px rgba(0,0,0,.28))}
+      .hero h1 ruby{ruby-position:over}
+      .hero h1 rt{font-family:"Yu Gothic","Hiragino Kaku Gothic ProN",system-ui,sans-serif;font-size:.15em;font-weight:600;letter-spacing:.20em;color:#efe8dc;padding-bottom:.45em}
       .instagram{background:#fffdf8}.instagram-card{display:flex;justify-content:space-between;align-items:center;gap:32px;padding:34px 0;border-top:1px solid var(--ink);border-bottom:1px solid var(--ink)}.instagram-handle{font-family:Georgia,serif;font-size:clamp(1.8rem,4vw,3rem);letter-spacing:.02em;margin-bottom:8px}.instagram-card p{margin:0;color:var(--muted);max-width:680px}.instagram-link{display:inline-block;flex:0 0 auto;border-bottom:1px solid var(--ink);padding-bottom:4px;font-weight:700}
-      @media(max-width:850px){.brand-logo img{width:175px;max-height:40px}.nav{gap:14px}.lang{padding:7px 10px;font-size:.78rem}.instagram-card{align-items:flex-start;flex-direction:column}}@media(max-width:390px){.brand-logo img{width:150px}.lang{font-size:.72rem;padding:6px 8px}}
+      @media(max-width:850px){.brand-logo img{width:175px;max-height:40px}.nav{gap:14px}.lang{padding:7px 10px;font-size:.78rem}.instagram-card{align-items:flex-start;flex-direction:column}.hero h1 rt{font-size:.17em}}
+      @media(max-width:390px){.brand-logo img{width:150px}.lang{font-size:.72rem;padding:6px 8px}}
     </style>`;
     html = html.replace("</head>", style + "\n</head>");
 
-    const headers = new Headers(response.headers); headers.delete("content-length"); headers.set("cache-control", "public, max-age=60");
+    const headers = new Headers(response.headers);
+    headers.delete("content-length");
+    headers.set("cache-control", "public, max-age=60");
     return new Response(html, {status:response.status,statusText:response.statusText,headers});
   }
 };
