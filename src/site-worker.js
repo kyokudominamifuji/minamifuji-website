@@ -37,7 +37,6 @@ export default {
       ])
     );
 
-    // 赤穂義士外伝・人情講談も、ほかの古典講談と同じ「演目名＋紹介文」に統一。
     const humanStories = storyList([
       {title:"松浦壱岐守",enTitle:"Matsuura Iki-no-kami",copy:"忠臣蔵・赤穂義士外伝。赤穂義士を、少し違った視点から見つめる物語です。",enCopy:"A side story of Chushingura and the Ako retainers, told from a different point of view."},
       {title:"八百屋甚兵衛",enTitle:"Yaoya Jinbei",copy:"市井に生きる人々の情と心意気を描く、人情味あふれる一席です。",enCopy:"A warm human story about the compassion and spirit of ordinary townspeople."},
@@ -48,41 +47,100 @@ export default {
       {title:"山内一豊とその妻千代",enTitle:"Yamauchi Kazutoyo and His Wife Chiyo",copy:"夫を支え、その運命を動かした妻・千代。夫婦の絆と知恵を描く物語です。",enCopy:"The story of Chiyo, whose wisdom and support helped shape her husband's destiny — a tale of partnership and devotion."}
     ]);
 
-    html = html.replace(
-      /<p class="title-(?:list|line)">「松浦壱岐守」[\s\S]*?<\/p>/,
-      humanStories
-    );
+    html = html.replace(/<p class="title-(?:list|line)">「松浦壱岐守」[\s\S]*?<\/p>/, humanStories);
+    html = html.replace(/<p class="more-stories">「八百屋甚兵衛」[\s\S]*?<\/p>/, `<div class="story-list compact extra-human-stories"><div class="story-item"><h4 data-ja="八百屋甚兵衛" data-en="Yaoya Jinbei">八百屋甚兵衛</h4><p data-ja="市井に生きる人々の情と心意気を描く、人情味あふれる一席です。" data-en="A warm human story about the compassion and spirit of ordinary townspeople.">市井に生きる人々の情と心意気を描く、人情味あふれる一席です。</p></div><div class="story-item"><h4 data-ja="三河屋幸吉" data-en="Mikawaya Kokichi">三河屋幸吉</h4><p data-ja="義理と人情の中で生きる人の姿を、あたたかく描く一席です。" data-en="A warm story of a life shaped by duty, compassion and human bonds.">義理と人情の中で生きる人の姿を、あたたかく描く一席です。</p></div></div>`);
 
-    // Newer source already has cards, but two titles were left in a separate “more stories” line.
-    html = html.replace(
-      /<p class="more-stories">「八百屋甚兵衛」[\s\S]*?<\/p>/,
-      `<div class="story-list compact extra-human-stories">
-        <div class="story-item"><h4 data-ja="八百屋甚兵衛" data-en="Yaoya Jinbei">八百屋甚兵衛</h4><p data-ja="市井に生きる人々の情と心意気を描く、人情味あふれる一席です。" data-en="A warm human story about the compassion and spirit of ordinary townspeople.">市井に生きる人々の情と心意気を描く、人情味あふれる一席です。</p></div>
-        <div class="story-item"><h4 data-ja="三河屋幸吉" data-en="Mikawaya Kokichi">三河屋幸吉</h4><p data-ja="義理と人情の中で生きる人の姿を、あたたかく描く一席です。" data-en="A warm story of a life shaped by duty, compassion and human bonds.">義理と人情の中で生きる人の姿を、あたたかく描く一席です。</p></div>
-      </div>`
-    );
+    const plainStyle = `<style id="repertoire-plain-v6">
+      /* 古典・創作とも、カードを使わない同一の縦リストデザイン */
+      #repertoire .story-list,
+      #repertoire .story-list.compact,
+      #repertoire .original-grid {
+        display:block!important;
+        grid-template-columns:none!important;
+        gap:0!important;
+        background:transparent!important;
+        border:0!important;
+      }
 
-    const unifyStyle = `<style id="repertoire-unify-v5">
-      #repertoire .extra-human-stories{margin-top:1px}
-      #repertoire .original-grid{border:1px solid rgba(27,26,23,.13)!important;display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:1px!important;background:rgba(27,26,23,.13)!important}
-      #repertoire .original-card,#repertoire .original-card:nth-child(5),#repertoire .featured-original{display:block!important;min-height:0!important;padding:24px!important;background:#fbf8f2!important;color:#1b1a17!important;border:0!important}
-      #repertoire .original-card:nth-child(5){grid-column:1/-1!important}
-      #repertoire .original-no{display:block!important;margin:0 0 10px!important;color:#a67b42!important;font-family:Georgia,serif!important;font-size:.72rem!important;letter-spacing:.12em!important}
-      #repertoire .original-card h4{margin:0 0 8px!important;font-family:"Yu Mincho","Hiragino Mincho ProN",serif!important;font-size:1.12rem!important;font-weight:600!important;line-height:1.6!important;color:#1b1a17!important}
-      #repertoire .original-card p{margin:0!important;font-family:"Yu Gothic","Hiragino Kaku Gothic ProN",system-ui,sans-serif!important;font-size:.9rem!important;line-height:1.8!important;color:#665f56!important}
-      #repertoire .special-badge{display:inline-block!important;margin:0 0 10px!important;color:#a67b42!important;border-color:#a67b42!important}
-      @media(max-width:850px){#repertoire .original-grid{grid-template-columns:1fr!important}#repertoire .original-card:nth-child(5){grid-column:auto!important}}
+      #repertoire .story-item,
+      #repertoire .original-card,
+      #repertoire .original-card:nth-child(5),
+      #repertoire .featured-original,
+      #repertoire .story {
+        display:block!important;
+        min-height:0!important;
+        margin:0!important;
+        padding:24px 0!important;
+        background:transparent!important;
+        color:#1b1a17!important;
+        border:0!important;
+        border-top:1px solid rgba(27,26,23,.20)!important;
+        box-shadow:none!important;
+      }
+
+      #repertoire .story-list > .story-item:last-child,
+      #repertoire .original-grid > .original-card:last-child,
+      #repertoire .repertoire-group > .story:last-child {
+        border-bottom:1px solid rgba(27,26,23,.20)!important;
+      }
+
+      #repertoire .story-item h4,
+      #repertoire .original-card h4,
+      #repertoire .story h5 {
+        margin:0 0 8px!important;
+        font-family:"Yu Mincho","Hiragino Mincho ProN",serif!important;
+        font-size:1.12rem!important;
+        line-height:1.6!important;
+        font-weight:600!important;
+        color:#1b1a17!important;
+      }
+
+      #repertoire .story-item p,
+      #repertoire .original-card p,
+      #repertoire .story p {
+        margin:0!important;
+        font-family:"Yu Gothic","Hiragino Kaku Gothic ProN",system-ui,sans-serif!important;
+        font-size:.92rem!important;
+        line-height:1.85!important;
+        color:#665f56!important;
+      }
+
+      #repertoire .original-no {
+        display:none!important;
+      }
+
+      #repertoire .special-badge {
+        display:inline-block!important;
+        margin:0 0 8px!important;
+        padding:0!important;
+        border:0!important;
+        background:transparent!important;
+        color:#a67b42!important;
+        font-size:.72rem!important;
+        letter-spacing:.12em!important;
+      }
+
+      #repertoire .extra-human-stories { margin-top:0!important; }
+
+      @media(max-width:520px){
+        #repertoire .story-item,
+        #repertoire .original-card,
+        #repertoire .story { padding:20px 0!important; }
+        #repertoire .story-item h4,
+        #repertoire .original-card h4,
+        #repertoire .story h5 { font-size:1.08rem!important; }
+      }
     </style>`;
-    html = html.replace("</head>", unifyStyle + "\n</head>");
 
-    html = html.replace("</body>", "<!-- unified-site-worker-v5 -->\n</body>");
+    html = html.replace("</head>", plainStyle + "\n</head>");
+    html = html.replace("</body>", "<!-- unified-site-worker-v6 -->\n</body>");
 
     const headers = new Headers(response.headers);
     headers.delete("content-length");
     headers.set("cache-control", "no-store, no-cache, must-revalidate, max-age=0");
     headers.set("pragma", "no-cache");
     headers.set("expires", "0");
-    headers.set("x-site-worker", "unified-site-worker-v5");
+    headers.set("x-site-worker", "unified-site-worker-v6");
 
     return new Response(html, {status: response.status,statusText: response.statusText,headers});
   }
