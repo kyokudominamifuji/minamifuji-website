@@ -1,6 +1,7 @@
 import site from "./brand-worker.js";
 
-const FLYER_URL = "https://raw.githubusercontent.com/kyokudominamifuji/minamifuji-website/main/futari-kai-2026-11-01.png";
+const FLYER_FRONT_URL = "https://raw.githubusercontent.com/kyokudominamifuji/minamifuji-website/main/futari-kai-2026-11-01-front.png";
+const FLYER_BACK_URL = "https://raw.githubusercontent.com/kyokudominamifuji/minamifuji-website/main/futari-kai-2026-11-01-back.png";
 
 export default {
   async fetch(request, env, ctx) {
@@ -15,13 +16,38 @@ export default {
     html = html.replace('<a href="#news" data-ja="お知らせ" data-en="News">お知らせ</a>', "");
 
     const eventTagline = '<p class="tagline" data-ja="声と糸が、物語を紡ぐ。" data-en="Voice and strings weave a story.">声と糸が、物語を紡ぐ。</p>';
-    const flyerOnTop = `${eventTagline}\n          <a class="event-flyer-link" href="/events/2026-11-01" aria-label="旭堂南不二・佐藤さくら子 二人会の詳細を見る"><img src="${FLYER_URL}" alt="2026年11月1日 旭堂南不二・佐藤さくら子 二人会 公演チラシ" loading="lazy"></a>`;
+    const flyerOnTop = `${eventTagline}\n          <a class="event-flyer-link" href="/events/2026-11-01" aria-label="旭堂南不二・佐藤さくら子 二人会の詳細を見る"><img src="${FLYER_FRONT_URL}" alt="2026年11月1日 旭堂南不二・佐藤さくら子 二人会 公演チラシ表" loading="lazy"></a>`;
     html = html.replace(eventTagline, flyerOnTop);
 
     html = html.replace(
       '<div class="flyer"><b>公演チラシ</b><br>完成版をここに掲載します。</div>',
-      `<div class="flyer flyer-image"><img src="${FLYER_URL}" alt="2026年11月1日 旭堂南不二・佐藤さくら子 二人会 公演チラシ" loading="lazy"></div>`
+      `<div class="flyer flyer-gallery"><a href="${FLYER_FRONT_URL}" target="_blank" rel="noopener noreferrer" aria-label="公演チラシ表を拡大して見る"><img src="${FLYER_FRONT_URL}" alt="2026年11月1日 旭堂南不二・佐藤さくら子 二人会 公演チラシ表" loading="lazy"></a><a href="${FLYER_BACK_URL}" target="_blank" rel="noopener noreferrer" aria-label="公演チラシ裏を拡大して見る"><img src="${FLYER_BACK_URL}" alt="2026年11月1日 旭堂南不二・佐藤さくら子 二人会 公演チラシ裏" loading="lazy"></a></div>`
     );
+
+    const flyerGalleryStyle = `<style id="futari-flyer-gallery-v2">
+      .flyer.flyer-gallery{
+        display:grid;
+        grid-template-columns:repeat(2,minmax(0,1fr));
+        gap:22px;
+        margin:46px 0;
+        padding:0;
+        border:0;
+        background:transparent;
+      }
+      .flyer-gallery a{display:block;line-height:0}
+      .flyer-gallery img{
+        display:block;
+        width:100%;
+        height:auto;
+        border:1px solid rgba(21,19,15,.12);
+        background:#fff;
+        box-shadow:0 10px 30px rgba(21,19,15,.08);
+      }
+      @media(max-width:700px){
+        .flyer.flyer-gallery{grid-template-columns:1fr;gap:18px}
+      }
+    </style>`;
+    html = html.replace("</head>", flyerGalleryStyle + "\n</head>");
 
     html = html.replace(
       '<div class="instagram-handle">@373.fuji</div>',
