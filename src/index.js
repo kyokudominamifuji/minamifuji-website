@@ -77,6 +77,8 @@ export default {
     .profile-copy{font-family:"Yu Mincho","Hiragino Mincho ProN",serif;font-size:1.06rem}
     .profile-copy p{margin-top:0;margin-bottom:22px}
     .profile-copy .big{font-size:1.35rem;line-height:1.9}
+    .profile-copy .big .kamigata-link{color:inherit;text-decoration:underline;text-decoration-color:var(--gold);text-decoration-thickness:1px;text-underline-offset:.22em}
+    .profile-copy .big .kamigata-link:hover,.profile-copy .big .kamigata-link:focus-visible{color:var(--red);text-decoration-color:currentColor}
     .repertoire{margin-top:34px;padding-top:24px;border-top:1px solid var(--line)}
     .repertoire small{display:block;color:var(--muted);letter-spacing:.13em;margin-bottom:8px}
     .contact{background:var(--red);color:#fff}
@@ -200,7 +202,7 @@ export default {
       <div class="profile-grid">
         <div class="portrait" aria-label="旭堂南不二"></div>
         <div class="profile-copy">
-          <p class="big" data-ja="静岡県富士市を拠点に活動する講談師。旭堂南左衛門に師事。上方講談協会所属。" data-en="A Kōdan storyteller based in Fuji City, Shizuoka. Disciple of Kyokudo Nanzaemon and a member of the Kamigata Kodan Association.">静岡県富士市を拠点に活動する講談師。旭堂南左衛門に師事。上方講談協会所属。</p>
+          <p class="big"><span data-ja="静岡県富士市を拠点に活動する講談師。旭堂南左衛門に師事。" data-en="A Kōdan storyteller based in Fuji City, Shizuoka. Disciple of Kyokudo Nanzaemon and a member of the ">静岡県富士市を拠点に活動する講談師。旭堂南左衛門に師事。</span><a class="kamigata-link" href="https://kamigata-kodan.jp/" target="_blank" rel="noopener noreferrer" data-ja="上方講談協会" data-en="Kamigata Kodan Association">上方講談協会</a><span data-ja="所属。" data-en=".">所属。</span></p>
           <p data-ja="一席一会。その日のお客さん、その場の笑い、その場の空気。同じ演目でも、語りは毎回変わります。いまを生きる人に届く言葉で、聴く人の明日が少し明るくなるような一席を目指しています。" data-en="Every performance is a once-only encounter. The audience, laughter and atmosphere make each telling different. Minamifuji aims to bring inherited stories to people living today, with performances that leave tomorrow a little brighter.">一席一会。その日のお客さん、その場の笑い、その場の空気。同じ演目でも、語りは毎回変わります。いまを生きる人に届く言葉で、聴く人の明日が少し明るくなるような一席を目指しています。</p>
           <p data-ja="講談会やイベントでの高座に加え、講演やワークショップにも取り組んでいます。世界に向けては、英語での導入と日本語の講談、英語字幕による発信も準備しています。" data-en="Alongside Kōdan performances, he offers talks and workshops. For international audiences, he is developing performances with English introductions, Japanese Kōdan and English subtitles.">高座だけでなく、大学で講談を教え、講演やワークショップにも取り組んでいます。世界に向けては、英語での導入と日本語の講談、英語字幕による発信も準備しています。</p>
           <div class="repertoire"><small data-ja="主な演目" data-en="SELECTED STORIES">主な演目</small><p>秀吉の初陣 ／ 秀吉と易者 ／ 黒田節の由来 ／ 左甚五郎・掛川の宿</p></div>
