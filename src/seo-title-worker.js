@@ -1,5 +1,6 @@
 import site from "./seo-worker.js";
 import gameHtml from "./tono-game.js";
+import upgradeHomepage from "./homepage-upgrade.js";
 
 export default {
   async fetch(request, env, ctx) {
@@ -13,6 +14,8 @@ export default {
     if (!contentType.includes("text/html")) return response;
 
     let html = await response.text();
+    // Final-pass enhancements are scoped to the homepage; events and Tono game remain untouched.
+    html = upgradeHomepage(html, path);
 
     html = html.replace(
       /<h4 data-ja="鍵盤に命をかけた男たち" data-en="Men Who Gave Their Lives to the Keys">[\s\S]*?<\/h4>/,
