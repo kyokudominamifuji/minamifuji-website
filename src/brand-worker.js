@@ -5,9 +5,179 @@ const INSTAGRAM_URL = "https://www.instagram.com/373.fuji/";
 const EVENT_FORM_URL = "https://forms.gle/1AqQEx7TZe2fJvqE8";
 
 function eventPage1101() {
-  return `<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="2026年11月1日 旭堂南不二・佐藤さくら子 二人会。公演詳細・チラシ・ご予約はこちら。"><title>旭堂南不二・佐藤さくら子 二人会 | 2026.11.01</title><style>
-  :root{--ink:#15130f;--paper:#fffdf8;--gold:#b1884f;--red:#9f2d26;--muted:#756d62;--line:rgba(21,19,15,.15)}*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:"Yu Gothic","Hiragino Kaku Gothic ProN",system-ui,sans-serif;line-height:1.8}a{color:inherit}.wrap{width:min(920px,calc(100% - 32px));margin:auto}.top{padding:22px 0;border-bottom:1px solid var(--line)}.top img{display:block;width:min(260px,72vw);height:auto}.hero{padding:64px 0 42px}.eyebrow{color:var(--gold);font-size:.75rem;font-weight:800;letter-spacing:.18em}h1{font-family:"Yu Mincho","Hiragino Mincho ProN",serif;font-weight:500;font-size:clamp(2.2rem,7vw,4.2rem);line-height:1.25;margin:10px 0 8px}.lead{font-family:"Yu Mincho",serif;font-size:1.25rem;margin:0;color:var(--muted)}.card{margin:34px 0;padding:28px;border:1px solid var(--line);background:#fff}.facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}.fact small{display:block;color:var(--muted);font-size:.72rem;letter-spacing:.1em}.fact b{font-size:1rem}.cta{display:inline-flex;align-items:center;justify-content:center;min-height:56px;padding:0 26px;background:var(--red);color:#fff;text-decoration:none;font-weight:800;margin-top:28px}.flyer{margin:46px 0;padding:38px 24px;text-align:center;border:1px dashed var(--line);color:var(--muted);background:#fff}.note{font-size:.86rem;color:var(--muted)}.back{display:inline-block;margin:10px 0 56px;text-decoration:none;border-bottom:1px solid var(--ink)}@media(max-width:640px){.hero{padding-top:42px}.facts{grid-template-columns:1fr}.card{padding:22px}.cta{width:100%}}
-  </style></head><body><div class="top"><div class="wrap"><a href="/"><img src="${LOGO_URL}" alt="講談師 旭堂南不二"></a></div></div><main class="wrap"><section class="hero"><div class="eyebrow">KŌDAN × SHAMISEN / 2026.11.01</div><h1>旭堂南不二・佐藤さくら子 二人会</h1><p class="lead">声と糸が、物語を紡ぐ。</p><div class="card"><div class="facts"><div class="fact"><small>日時</small><b>2026年11月1日（日）16:00開場 ／ 16:15開演</b></div><div class="fact"><small>会場</small><b>居酒屋 ポチ（静岡県富士市吉原4丁目10-48 2階）</b></div><div class="fact"><small>料金</small><b>前売 3,000円 ／ 当日 3,500円・1ドリンク付</b></div><div class="fact"><small>出演</small><b>旭堂南不二 ／ 佐藤さくら子</b></div></div><a class="cta" href="${EVENT_FORM_URL}" target="_blank" rel="noopener noreferrer">Googleフォームから申し込む →</a><p class="note">このページをQRコードにしてください。申込フォームや掲載内容を変更しても、QRコードはそのまま使えます。</p></div><div class="flyer"><b>公演チラシ</b><br>完成版をここに掲載します。</div><a class="back" href="/">旭堂南不二 公式サイトへ戻る</a></section></main></body></html>`;
+  const front = "https://raw.githubusercontent.com/kyokudominamifuji/minamifuji-website/main/futari-kai-2026-11-01-front.png";
+  const back = "https://raw.githubusercontent.com/kyokudominamifuji/minamifuji-website/main/futari-kai-2026-11-01-back.png";
+  return `<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#171a25">
+  <meta name="description" content="2026年11月1日（日）旭堂南不二・佐藤さくら子 二人会。居酒屋ポチ（富士市吉原）にて16:15開演。出演情報と公演チラシ・ご予約はこちら。">
+  <link rel="canonical" href="https://kyokudominamifuji.com/events/2026-11-01">
+  <meta property="og:type" content="event">
+  <meta property="og:title" content="旭堂南不二・佐藤さくら子 二人会｜2026年11月1日">
+  <meta property="og:description" content="張り扇と三本の糸が、物語を紡ぐ。11月1日、富士・居酒屋ポチにて。">
+  <meta property="og:url" content="https://kyokudominamifuji.com/events/2026-11-01">
+  <meta property="og:image" content="${front}">
+  <meta name="twitter:card" content="summary_large_image">
+  <title>第一回 旭堂南不二・佐藤さくら子 二人会｜2026.11.01</title>
+  <style>
+    :root{--fk-night:#171a25;--fk-ivory:#fbf8f0;--fk-paper:#fffdf8;--fk-gold:#c7a36a;--fk-orange:#d65c21;--fk-ink:#222019;--fk-muted:#6d675c;--fk-edge:rgba(38,34,27,.15)}
+    *,*::before,*::after{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:var(--fk-ivory);color:var(--fk-ink);font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",system-ui,sans-serif;line-height:1.8;overflow-x:hidden}
+    a{color:inherit}
+    img{max-width:100%}
+    .fk-stripe{height:9px;background:repeating-linear-gradient(90deg,#111 0 32px,#e95f25 32px 62px,#138834 62px 94px,#111 94px 120px)}
+    .fk-container{width:min(1100px,calc(100% - 48px));margin-inline:auto}
+    .fk-head{background:var(--fk-night);color:#fff}
+    .fk-head-inner{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:15px 0}
+    .fk-home-brand{display:block;line-height:0}
+    .fk-home-brand img{width:min(224px,48vw);height:47px;object-fit:contain;object-position:left center}
+    .fk-backlink{white-space:nowrap;text-decoration:none;color:#f2dfc0;border-bottom:1px solid rgba(242,223,192,.48);font-size:.8rem;letter-spacing:.06em;padding-bottom:2px}
+    .fk-hero{position:relative;background:var(--fk-night);color:#fff;padding:58px 0 76px;overflow:hidden}
+    .fk-hero::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 86% 21%,rgba(199,163,106,.15),transparent 48%),linear-gradient(135deg,transparent 70%,rgba(199,163,106,.045) 70%)}
+    .fk-hero-grid{position:relative;display:grid;grid-template-columns:minmax(0,1.18fr) minmax(280px,.82fr);gap:clamp(32px,5vw,84px);align-items:center}
+    .fk-kicker{color:#d9bd89;font-size:.76rem;font-weight:800;letter-spacing:.16em}
+    .fk-date{display:flex;align-items:baseline;gap:14px;margin:28px 0 28px;color:#e8d6b4}
+    .fk-date strong{font:500 clamp(3.2rem,7vw,5.5rem)/1 Georgia,serif;letter-spacing:-.045em;color:#fff}
+    .fk-date span{font-size:.85rem;letter-spacing:.11em}
+    .fk-title{font-family:"Yu Mincho","Hiragino Mincho ProN",serif;font-weight:600;font-size:clamp(2.5rem,4.4vw,4.8rem);line-height:1.4;letter-spacing:.04em;margin:0}
+    .fk-title .fk-cross{color:var(--fk-gold);font-family:Georgia,serif;font-size:.62em}
+    .fk-title small{display:block;margin-top:12px;color:#e6c08a;font-family:"Yu Mincho","Hiragino Mincho ProN",serif;font-size:clamp(1.1rem,2.2vw,1.6rem);font-weight:500;letter-spacing:.24em}
+    .fk-lead{font-family:"Yu Mincho","Hiragino Mincho ProN",serif;color:#f5e7c8;font-size:clamp(1.2rem,2vw,1.6rem);line-height:1.9;margin:30px 0 0}
+    .fk-summary{margin:16px 0 0;color:#d5d1c8;font-size:.95rem}
+    .fk-hero-actions{display:flex;flex-wrap:wrap;gap:12px;margin:32px 0 0}
+    .fk-primary{display:inline-flex;align-items:center;justify-content:center;min-height:54px;padding:12px 28px;background:var(--fk-orange);border:1px solid var(--fk-orange);color:#fff;text-align:center;font-size:1rem;font-weight:800;letter-spacing:.05em;text-decoration:none;box-shadow:0 8px 26px rgba(0,0,0,.14);transition:background .2s,transform .2s}
+    .fk-primary:hover,.fk-primary:focus-visible{background:#b74714;transform:translateY(-2px)}
+    .fk-subtle-link{display:inline-flex;align-items:center;justify-content:center;padding:12px 10px;color:#e9d9b9;font-size:.86rem;text-underline-offset:5px}
+    .fk-poster{margin:0;justify-self:center;width:min(100%,390px);text-align:center}
+    .fk-poster a{display:block;line-height:0}
+    .fk-poster img{display:block;width:100%;height:auto;background:#fff;box-shadow:14px 18px 40px rgba(0,0,0,.33);border:7px solid #fff}
+    .fk-poster figcaption{color:#c9c3b5;font-size:.76rem;line-height:1.7;margin-top:14px}
+    .fk-details{padding:70px 0 74px}
+    .fk-section-eyebrow{display:block;color:#9a6a30;font-size:.74rem;letter-spacing:.18em;font-weight:800;margin-bottom:8px}
+    .fk-section-title{margin:0 0 26px;font:600 clamp(1.8rem,3.5vw,2.6rem)/1.4 "Yu Mincho","Hiragino Mincho ProN",serif}
+    .fk-data{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));border:1px solid var(--fk-edge);background:var(--fk-paper)}
+    .fk-data-item{padding:25px 28px;min-width:0}
+    .fk-data-item:nth-child(odd){border-right:1px solid var(--fk-edge)}
+    .fk-data-item:nth-child(-n+2){border-bottom:1px solid var(--fk-edge)}
+    .fk-data dt{color:#9a6a30;font-size:.73rem;font-weight:800;letter-spacing:.13em;margin-bottom:7px}
+    .fk-data dd{margin:0;font-size:1.04rem;font-weight:700;line-height:1.75;overflow-wrap:anywhere}
+    .fk-data dd small{font-size:.82rem;color:var(--fk-muted);font-weight:400}
+    .fk-conditions{margin:20px 0 0;color:var(--fk-muted);font-size:.84rem}
+    .fk-booking{display:flex;align-items:center;justify-content:space-between;gap:24px;margin:34px 0 0;padding:26px 30px;background:#f0e5d2;border-left:4px solid var(--fk-orange)}
+    .fk-booking h3{margin:0;font:600 1.35rem/1.5 "Yu Mincho","Hiragino Mincho ProN",serif}
+    .fk-booking p{margin:5px 0 0;color:#645a4e;font-size:.85rem}
+    .fk-booking .fk-primary{flex-shrink:0}
+    .fk-people{padding:65px 0 76px;background:#eee7db}
+    .fk-people-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.85fr);gap:54px;align-items:start}
+    .fk-people p{line-height:2;max-width:550px}
+    .fk-guest{margin:24px 0 0;padding-top:18px;border-top:1px solid var(--fk-edge)}
+    .fk-reverse{margin:0}
+    .fk-reverse a{display:block;max-width:440px;line-height:0;background:#fff;box-shadow:0 16px 38px rgba(25,20,10,.12)}
+    .fk-reverse img{display:block;width:100%;height:auto}
+    .fk-reverse figcaption{margin-top:10px;color:var(--fk-muted);font-size:.78rem}
+    .fk-footer{background:var(--fk-night);color:#c9c4ba;padding:35px 0 45px;text-align:center;font-size:.86rem}
+    .fk-footer a{color:#f2dfc0;text-underline-offset:4px}
+    .fk-footer p{margin:8px 0}
+    @media(max-width:820px){
+      .fk-hero-grid{grid-template-columns:1fr;gap:45px}
+      .fk-hero{padding:42px 0 55px}
+      .fk-date{margin:20px 0}
+      .fk-poster{width:min(100%,440px)}
+      .fk-people-grid{grid-template-columns:1fr;gap:26px}
+      .fk-reverse a{margin-inline:auto}
+    }
+    @media(max-width:560px){
+      .fk-container{width:calc(100% - 32px)}
+      .fk-head-inner{padding:12px 0}
+      .fk-home-brand img{height:38px}
+      .fk-backlink{font-size:.7rem}
+      .fk-title{font-size:clamp(2.05rem,9vw,3rem)}
+      .fk-lead{font-size:1.16rem}
+      .fk-hero-actions{display:grid}
+      .fk-primary,.fk-subtle-link{width:100%}
+      .fk-details,.fk-people{padding:52px 0 56px}
+      .fk-data{grid-template-columns:1fr}
+      .fk-data-item,.fk-data-item:nth-child(odd),.fk-data-item:nth-child(-n+2){border-right:0;border-bottom:1px solid var(--fk-edge)}
+      .fk-data-item:last-child{border-bottom:0}
+      .fk-data-item{padding:19px 20px}
+      .fk-booking{display:block;padding:22px 20px}
+      .fk-booking .fk-primary{margin-top:18px}
+    }
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.fk-primary{transition:none}}
+  </style>
+</head>
+<body class="fk-detail">
+<div class="fk-stripe" aria-hidden="true"></div>
+<header class="fk-head">
+  <div class="fk-container fk-head-inner">
+    <a class="fk-home-brand" href="/" aria-label="旭堂南不二 公式サイトに戻る"><img src="${LOGO_URL}" alt="旭堂南不二"></a>
+    <a class="fk-backlink" href="/">公式HPに戻る</a>
+  </div>
+</header>
+<main id="main">
+  <section class="fk-hero" aria-labelledby="fk-event-heading">
+    <div class="fk-container fk-hero-grid">
+      <div>
+        <div class="fk-kicker">FIRST PERFORMANCE ・ 講談 × 三味線</div>
+        <div class="fk-date"><strong>11.01</strong><span>2026年（日）</span></div>
+        <h1 class="fk-title" id="fk-event-heading">旭堂南不二 <span class="fk-cross">×</span><br>佐藤さくら子<small>第 一 回 二 人 会</small></h1>
+        <p class="fk-lead">張り扇と三本の糸が、物語を紡ぐ。</p>
+        <p class="fk-summary">語りの迫力と三味線の響きが出会う、富士の一日。<br>ゲストはオレンジマジシャンニシオ。</p>
+        <div class="fk-hero-actions">
+          <a class="fk-primary" href="${EVENT_FORM_URL}" target="_blank" rel="noopener noreferrer">Googleフォームから予約する</a>
+          <a class="fk-subtle-link" href="#fk-details">公演の詳細を見る ↓</a>
+        </div>
+      </div>
+      <figure class="fk-poster">
+        <a href="${front}" target="_blank" rel="noopener noreferrer" aria-label="公演チラシ表を原寸で開く"><img src="${front}" alt="2026年11月1日 第一回二人会の公演チラシ表（印刷済みQRコードを含む）" loading="eager"></a>
+        <figcaption>チラシをタップすると拡大できます。印刷済みQRコードも変更していません。</figcaption>
+      </figure>
+    </div>
+  </section>
+  <section class="fk-details" id="fk-details" aria-labelledby="fk-info-heading">
+    <div class="fk-container">
+      <span class="fk-section-eyebrow">EVENT INFORMATION</span>
+      <h2 class="fk-section-title" id="fk-info-heading">公演のご案内</h2>
+      <dl class="fk-data">
+        <div class="fk-data-item"><dt>日時</dt><dd>2026年11月1日（日）<br>16:00開場 ／ 16:15開演<br><small>18:00頃終演予定</small></dd></div>
+        <div class="fk-data-item"><dt>会場</dt><dd>居酒屋 ポチ<br><small>静岡県富士市吉原4丁目10-48 2階</small></dd></div>
+        <div class="fk-data-item"><dt>木戸銭</dt><dd>前売 3,000円 ／ 当日 3,500円<br><small>1ドリンク付（アルコール含む）</small></dd></div>
+        <div class="fk-data-item"><dt>出演</dt><dd>旭堂南不二 ／ 佐藤さくら子<br><small>ゲスト：オレンジマジシャンニシオ</small></dd></div>
+      </dl>
+      <p class="fk-conditions">※ 全席自由。未就学児は入場できません。</p>
+      <div class="fk-booking">
+        <div><h3>お席のご予約はこちら</h3><p>申込先は従来と同じGoogleフォームです。チラシのQRコードも引き続き利用できます。</p></div>
+        <a class="fk-primary" href="${EVENT_FORM_URL}" target="_blank" rel="noopener noreferrer">お申し込みへ進む →</a>
+      </div>
+    </div>
+  </section>
+  <section class="fk-people" aria-labelledby="fk-cast-heading">
+    <div class="fk-container fk-people-grid">
+      <div>
+        <span class="fk-section-eyebrow">PERFORMERS</span>
+        <h2 class="fk-section-title" id="fk-cast-heading">語りと糸、そして驚き。</h2>
+        <p>講談師・旭堂南不二と三味線奏者・佐藤さくら子が、伝統の話芸と音色を届けます。さらに、オレンジマジシャンニシオがゲスト出演。</p>
+        <p class="fk-guest">出演者のプロフィールは、右のチラシ裏面に掲載しています。画像を押すと拡大できます。</p>
+      </div>
+      <figure class="fk-reverse">
+        <a href="${back}" target="_blank" rel="noopener noreferrer" aria-label="出演者プロフィール・チラシ裏面を原寸で開く"><img src="${back}" alt="旭堂南不二・佐藤さくら子・オレンジマジシャンニシオのプロフィールが掲載されたチラシ裏面" loading="lazy"></a>
+        <figcaption>公演チラシ 裏面 ／ 出演者プロフィール</figcaption>
+      </figure>
+    </div>
+  </section>
+</main>
+<footer class="fk-footer">
+  <div class="fk-container">
+    <p>お問い合わせ：<a href="mailto:373fuji@gmail.com">373fuji@gmail.com</a></p>
+    <p><a href="/">旭堂南不二 公式サイト</a> ／ 一席一会、二つとない講談を。</p>
+  </div>
+</footer>
+</body>
+</html>`;
 }
 
 export default {
