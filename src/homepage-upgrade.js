@@ -76,6 +76,10 @@ function threePillarEnhancements(html, path) {
 export default function upgradeHomepage(html,path) {
   if (!["/","/en","/en/"].includes(path) || html.includes("mf-homepage-upgrade-v2")) return html;
   const en = path !== "/";
+  // The same original photo as the desktop background, rendered at its natural
+  // aspect ratio on phones so the head is never cropped by background-cover.
+  const mobileHeroPhoto = '<img class="mf-mobile-hero-photo" src="https://raw.githubusercontent.com/kyokudominamifuji/minamifuji-website/main/9DE0020E-0A9D-417A-B768-D430D0992E62.png" alt="講談師・旭堂南不二" decoding="async" fetchpriority="high">';
+  html = html.replace('<section class="hero">', '<section class="hero">\\n' + mobileHeroPhoto);
   const stage = html.match(/<section class="stage" id="stage">[\s\S]*?<\/section>/)?.[0];
   if (stage && /<section class="hero"[\s\S]*?<\/section>/.test(html)) {
     html = html.replace(stage,"");
@@ -169,6 +173,22 @@ header{background:rgba(19,18,16,.95)!important;backdrop-filter:blur(12px);-webki
   .mf-hero-next b{font-size:.87rem}
   .hero .actions .btn[href="#repertoire"],.hero .actions .btn[href="#contact"]{display:none}
   .hero .actions .btn{min-height:46px;flex:1 1 45%;padding:8px 9px!important}
+}
+/* On phones, use a real image rather than a cropped cover background.
+   The picture begins below the fixed 68px navigation and scales to fit whole. */
+.mf-mobile-hero-photo{display:none}
+@media(max-width:850px){
+  .hero{display:block!important;min-height:0!important;padding:68px 0 0!important;background:#11100d}
+  .hero::before,.hero::after{display:none!important}
+  .hero .mf-mobile-hero-photo{display:block;width:100%;height:auto;max-height:min(70svh,580px);object-fit:contain;object-position:center top;margin:0 auto;background:#11100d}
+  .hero-inner{padding:28px 0 48px!important;text-align:center}
+  .hero-inner::before{content:"";display:block;width:44px;height:2px;margin:0 auto 19px;background:#c4a16d}
+  .hero h1{font-size:clamp(2.65rem,11vw,3.5rem)!important;line-height:1.18;letter-spacing:.045em}
+  .hero .roman{margin-top:10px;font-size:clamp(.88rem,3.5vw,1.05rem);letter-spacing:.13em;color:#e5c99e}
+  .hero-lead{margin-top:24px}
+  .hero-sub{margin-left:auto;margin-right:auto;max-width:36ch}
+  .hero .mf-hero-next{margin-left:auto;margin-right:auto;text-align:left}
+  .hero .actions{justify-content:center}
 }
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.navlinks a{transition:none}}
 </style>`;
