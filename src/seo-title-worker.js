@@ -2,6 +2,25 @@ import site from "./seo-worker.js";
 import gameHtml from "./tono-game.js";
 import upgradeHomepage from "./homepage-upgrade.js";
 
+function ensureAssociationLink(html, path) {
+  if (!["/", "/en", "/en/"].includes(path)) return html;
+
+  // Keep the association link present even if a cached upstream profile uses
+  // the former plain-text bio. Do not touch event pages or game routes.
+  if (!html.includes('class="kamigata-link"')) {
+    const oldParagraph = /<p class="big" data-ja="静岡県富士市を拠点に活動する講談師。旭堂南左衛門に師事。上方講談協会所属。" data-en="A Kōdan storyteller based in Fuji City, Shizuoka. Disciple of Kyokudo Nanzaemon and a member of the Kamigata Kodan Association.">静岡県富士市を拠点に活動する講談師。旭堂南左衛門に師事。上方講談協会所属。<\/p>/;
+    const withLink = '<p class="big"><span data-ja="静岡県富士市を拠点に活動する講談師。旭堂南左衛門に師事。" data-en="A Kōdan storyteller based in Fuji City, Shizuoka. Disciple of Kyokudo Nanzaemon and a member of the ">静岡県富士市を拠点に活動する講談師。旭堂南左衛門に師事。</span><a class="kamigata-link" href="https://kamigata-kodan.jp/" target="_blank" rel="noopener noreferrer" data-ja="上方講談協会" data-en="Kamigata Kodan Association" aria-label="上方講談協会 公式サイト">上方講談協会</a><span data-ja="所属。" data-en=".">所属。</span></p>';
+    html = html.replace(oldParagraph, withLink);
+  }
+
+  // A discreet but reliably visible affordance.
+  if (html.includes('class="kamigata-link"') && !html.includes('id="association-link-style"')) {
+    html = html.replace("</head>", '<style id="association-link-style">.profile-copy .big a.kamigata-link{color:inherit;text-decoration:underline!important;text-decoration-color:#a67b3f!important;text-decoration-thickness:2px!important;text-underline-offset:.18em!important}.profile-copy .big a.kamigata-link:hover,.profile-copy .big a.kamigata-link:focus-visible{color:#9f2d26!important;text-decoration-color:currentColor!important}</style>\n</head>');
+  }
+  return html;
+}
+
+
 export default {
   async fetch(request, env, ctx) {
     // Serve the stand-alone Tono no Okimochi game without modifying the homepage.
@@ -16,6 +35,7 @@ export default {
     let html = await response.text();
     // Final-pass enhancements are scoped to the homepage; events and Tono game remain untouched.
     html = upgradeHomepage(html, path);
+    html = ensureAssociationLink(html, path);
 
     html = html.replace(
       /<h4 data-ja="鍵盤に命をかけた男たち" data-en="Men Who Gave Their Lives to the Keys">[\s\S]*?<\/h4>/,
