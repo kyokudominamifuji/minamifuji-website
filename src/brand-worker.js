@@ -7,7 +7,7 @@ const EVENT_FORM_URL = "https://forms.gle/1AqQEx7TZe2fJvqE8";
 function eventPage1101() {
   const front = "https://raw.githubusercontent.com/kyokudominamifuji/minamifuji-website/main/futari-kai-2026-11-01-front.png";
   const back = "https://raw.githubusercontent.com/kyokudominamifuji/minamifuji-website/main/futari-kai-2026-11-01-back.png";
-  return `<!doctype html>
+  const page = `<!doctype html>
 <html lang="ja">
 <head>
   <meta charset="utf-8">
@@ -178,6 +178,22 @@ function eventPage1101() {
 </footer>
 </body>
 </html>`;
+  // Printed QR destinations never change; expired forms are removed automatically.
+  const todayInJapan = new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString().slice(0, 10);
+  if (todayInJapan <= "2026-11-01") return page;
+  return page
+    .replace(
+      '<a class="fk-primary" href="' + EVENT_FORM_URL + '" target="_blank" rel="noopener noreferrer">Googleフォームから予約する</a>',
+      '<span class="fk-primary" role="status" style="background:#514e46;border-color:#514e46;box-shadow:none;cursor:default">この公演は終了しました</span>'
+    )
+    .replace(
+      '<h3>お席のご予約はこちら</h3><p>申込先は従来と同じGoogleフォームです。チラシのQRコードも引き続き利用できます。</p>',
+      '<h3>ご来場ありがとうございました</h3><p>こちらは終了した公演の記録です。次回の公演については公式HPの出演情報をご覧ください。</p>'
+    )
+    .replace(
+      '<a class="fk-primary" href="' + EVENT_FORM_URL + '" target="_blank" rel="noopener noreferrer">お申し込みへ進む →</a>',
+      '<a class="fk-primary" href="/#stage">これからの公演を見る →</a>'
+    );
 }
 
 export default {
