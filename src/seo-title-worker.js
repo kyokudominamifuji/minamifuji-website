@@ -1,13 +1,12 @@
 import site from "./seo-worker.js";
+import gameHtml from "./tono-game.js";
 
 export default {
   async fetch(request, env, ctx) {
     // Serve the stand-alone Tono no Okimochi game without modifying the homepage.
     const path = new URL(request.url).pathname;
     if (path === "/games/tono" || path === "/games/tono/") {
-      const game = await fetch("https://raw.githubusercontent.com/kyokudominamifuji/minamifuji-website/main/games/tono/index.html");
-      if (!game.ok) return new Response("ゲームを読み込めませんでした。", { status: 503, headers: { "content-type": "text/plain; charset=utf-8" } });
-      return new Response(game.body, { status: 200, headers: { "content-type": "text/html; charset=utf-8", "cache-control": "no-store", "x-content-type-options": "nosniff" } });
+      return new Response(gameHtml, { status: 200, headers: { "content-type": "text/html; charset=utf-8", "cache-control": "no-store, max-age=0, must-revalidate", "x-content-type-options": "nosniff" } });
     }
     const response = await site.fetch(request, env, ctx);
     const contentType = response.headers.get("content-type") || "";
