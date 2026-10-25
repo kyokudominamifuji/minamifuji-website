@@ -37,6 +37,9 @@ function renderEvent(e) {
     ? `<a class="reserve" href="${esc(e.reservation_url)}" target="_blank" rel="noopener noreferrer" data-ja="${esc(e.reservation_label_ja || "ご予約はこちら ↗")}" data-en="${esc(e.reservation_label_en || "Book here ↗")}">${esc(e.reservation_label_ja || "ご予約はこちら ↗")}</a>`
     : "";
 
+  const detailLink = e.id === "2026-11-01-minamifuji-sakurako"
+    ? '<a class="event-detail-link" href="/events/2026-11-01" aria-label="第一回二人会の公演詳細とチラシを見る">公演詳細・チラシを見る →</a>'
+    : "";
   const flyerSrc = e.id === "2026-10-03-gannoji-nagoya" ? gannojiFlyer : e.flyer_url;
   const flyer = flyerSrc
     ? `<figure class="event-flyer"><a href="${esc(flyerSrc)}" target="_blank" rel="noopener noreferrer"><img src="${esc(flyerSrc)}" alt="${esc(e.title_ja || "公演チラシ")}" loading="lazy"></a><figcaption data-ja="チラシをタップすると拡大できます" data-en="Tap the flyer to enlarge">チラシをタップすると拡大できます</figcaption></figure>`
@@ -63,7 +66,7 @@ function renderEvent(e) {
           </div>
           ${program}
           ${flyer}
-          <div class="event-actions">${reservation}</div>
+          <div class="event-actions">${reservation}${detailLink}</div>
         </div>
       </article>`;
 }
@@ -188,6 +191,82 @@ export default {
     border-bottom: 1px solid var(--ink);
     padding-bottom: 4px;
     font-weight: 700;
+  }
+
+  /* Highlight the featured Nov 1 performance with an uncluttered poster + booking layout. */
+  .event[data-event-id="2026-11-01-minamifuji-sakurako"] {
+    padding: 34px 30px;
+    margin-bottom: 28px;
+    border: 1px solid rgba(21,19,15,.16);
+    border-top: 4px solid var(--red);
+    background: #fffaf1;
+    box-shadow: 0 16px 45px rgba(21,19,15,.05);
+  }
+  .event[data-event-id="2026-11-01-minamifuji-sakurako"] > div:nth-child(2) {
+    display: grid;
+    grid-template-columns: minmax(0,1fr) minmax(220px,300px);
+    column-gap: 30px;
+    align-items: start;
+    min-width: 0;
+  }
+  .event[data-event-id="2026-11-01-minamifuji-sakurako"] > div:nth-child(2) > :not(.event-flyer-link) {
+    grid-column: 1;
+    min-width: 0;
+  }
+  .event[data-event-id="2026-11-01-minamifuji-sakurako"] .event-flyer-link {
+    grid-column: 2;
+    grid-row: 1 / span 6;
+    margin: 0;
+    width: 100%;
+  }
+  .event[data-event-id="2026-11-01-minamifuji-sakurako"] .facts {
+    grid-template-columns: minmax(0,1fr) !important;
+    gap: 14px;
+  }
+  .event[data-event-id="2026-11-01-minamifuji-sakurako"] .fact b {
+    display: block;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+  }
+  .event[data-event-id="2026-11-01-minamifuji-sakurako"] .event-actions {
+    gap: 10px;
+    margin-top: 15px;
+  }
+  .event[data-event-id="2026-11-01-minamifuji-sakurako"] .event-actions .reserve,
+  .event-detail-link {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 45px;
+    padding: 10px 15px;
+    margin: 0;
+    border: 1px solid var(--red);
+    text-decoration: none;
+    font-size: .85rem;
+    line-height: 1.5;
+    font-weight: 800;
+    text-align: center;
+  }
+  .event[data-event-id="2026-11-01-minamifuji-sakurako"] .event-actions .reserve {
+    background: var(--red);
+    color: #fff;
+  }
+  .event-detail-link { color: var(--red); background: transparent; }
+  .event-detail-link:hover,.event-detail-link:focus-visible {background: rgba(159,45,38,.07);}
+  @media (max-width: 1050px) {
+    .event[data-event-id="2026-11-01-minamifuji-sakurako"] > div:nth-child(2) {
+      grid-template-columns: 1fr;
+    }
+    .event[data-event-id="2026-11-01-minamifuji-sakurako"] .event-flyer-link {
+      grid-column: 1;
+      grid-row: auto;
+      max-width: 360px;
+      margin: 12px 0 20px;
+    }
+  }
+  @media (max-width: 600px) {
+    .event[data-event-id="2026-11-01-minamifuji-sakurako"] {padding: 24px 18px;}
+    .event[data-event-id="2026-11-01-minamifuji-sakurako"] .event-actions {flex-direction: column;align-items:stretch;}
   }
 
   .event-empty {
