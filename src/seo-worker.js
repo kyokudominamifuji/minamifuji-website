@@ -167,6 +167,10 @@ export default {
 </urlset>`;
       return new Response(xml, { headers: { "content-type": "application/xml; charset=UTF-8", "cache-control": "public, max-age=3600" } });
     }
+    // Keep the printed QR destination's dedicated event page canonical, title and form link intact.
+    if (url.pathname === "/events/2026-11-01" || url.pathname === "/events/2026-11-01/") {
+      return site.fetch(request, env, ctx);
+    }
     const lang = url.pathname === "/en" || url.pathname.startsWith("/en/") ? "en" : "ja";
     const response = await site.fetch(request, env, ctx);
     const contentType = response.headers.get("content-type") || "";
