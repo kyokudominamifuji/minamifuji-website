@@ -4,10 +4,8 @@ function threePillarEnhancements(html, path) {
   const en = path === "/en" || path === "/en/";
   if (html.includes('id="mf-three-paths"')) return html;
 
-  const upcoming = html.match(/<article class="event"[^>]*>[\s\S]*?<\/article>/)?.[0] || "";
-  const bookingLink = upcoming.match(/<a class="reserve" href="([^"]+)"/)?.[1] || "#stage";
-  const isWebBooking = /^https?:\/\//i.test(bookingLink);
-  const bookingTargetAttrs = isWebBooking ? ' target="_blank" rel="noopener noreferrer"' : "";
+  // An evergreen navigation item must never be coupled to a single show's booking form.
+  // Per-event booking links still live exclusively in the upcoming performance cards.
   const fanTarget = html.includes('id="instagram"') ? "#instagram" : "#about";
   const threeCards = en ? [
     {no:"01", eyebrow:"WATCH", title:"Experience a live performance", copy:"See upcoming dates, venues, and how to book. Your first Kōdan is welcome.", url:"#stage", label:"View performances"},
@@ -62,11 +60,11 @@ function threePillarEnhancements(html, path) {
 
   // Three equally accessible, purposeful actions on mobile.
   if (html.includes('<nav class="mf-dock"')) {
-    const labelBooking = en ? "Book a show" : "公演予約";
+    const labelBooking = en ? "Performances" : "公演を観る";
     const labelInquiry = en ? "Inquiries" : "出演依頼";
     const labelFollow = en ? "Follow" : "活動を見る";
     const newDock = '<nav class="mf-dock mf-dock-three" aria-label="' + (en ? 'Quick access' : 'クイックメニュー') + '">' +
-      '<a class="mf-dock-primary" href="' + bookingLink + '"' + bookingTargetAttrs + '>' + labelBooking + '</a>' +
+      '<a class="mf-dock-primary" href="#stage">' + labelBooking + '</a>' +
       '<a class="mf-dock-shows" href="#contact">' + labelInquiry + '</a>' +
       '<a class="mf-dock-shows" href="' + fanTarget + '">' + labelFollow + '</a>' +
       '</nav>';
@@ -87,13 +85,13 @@ export default function upgradeHomepage(html,path) {
   const year = first.match(/<div class="year">([^<]+)<\/div>/)?.[1] || "";
   const day = first.match(/<div class="day">([^<]+)<\/div>/)?.[1] || "";
   const title = first.match(/<h3[^>]*>([\s\S]*?)<\/h3>/)?.[1]?.replace(/<[^>]+>/g,"") || "";
-  const form = first.match(/<a class="reserve" href="([^"]+)"/)?.[1] || "";
+  // The global navigation stays valid even after the next performance is over.
   if(first) html = html.replace('<article class="event"', '<article class="event" data-next-event="true"');
   if(first && year && day && title && html.includes('<div class="actions">')) {
     const heroNext = '<aside class="mf-hero-next" aria-label="' + (en?'Next performance':'次回の公演') + '"><span>' + (en?'NEXT PERFORMANCE':'次回の公演') + '</span><a href="#stage"><b>' + year + '.' + day + '</b> ' + title + ' <i aria-hidden="true">↗</i></a></aside>';
     html = html.replace('<div class="actions">',heroNext+'\n<div class="actions">');
   }
-  const dock = '<nav class="mf-dock" aria-label="' + (en?'Quick access':'クイックメニュー') + '"><a class="mf-dock-shows" href="#stage">' + (en?'Show dates':'公演を見る') + '</a><a class="mf-dock-primary" href="' + (form || '#contact') + '"' + (form?' target="_blank" rel="noopener noreferrer"':'') + '>' + (form?(en?'Book now':'次の公演を予約'):(en?'Inquiries':'出演依頼')) + ' ↗</a></nav>';
+  const dock = '<nav class="mf-dock" aria-label="' + (en?'Quick access':'クイックメニュー') + '"><a class="mf-dock-shows" href="#stage">' + (en?'Show dates':'公演を見る') + '</a><a class="mf-dock-primary" href="#stage">' + (en?'Performances':'公演を観る') + ' ↗</a></nav>';
   html = html.replace("</body>", dock+"\n</body>");
 
   const style = `
