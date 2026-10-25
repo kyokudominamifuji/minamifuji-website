@@ -123,7 +123,7 @@ function eventPage1101() {
     <div class="fk-container fk-hero-grid">
       <div>
         <div class="fk-kicker">FIRST PERFORMANCE ・ 講談 × 三味線</div>
-        <div class="fk-date"><strong>11.01</strong><span>2026年（日）</span></div>
+        <div class="fk-date"><strong>11.01</strong><span>2026年・日曜日</span></div>
         <h1 class="fk-title" id="fk-event-heading">旭堂南不二 <span class="fk-cross">×</span><br>佐藤さくら子<small>第 一 回 二 人 会</small></h1>
         <p class="fk-lead">張り扇と三本の糸が、物語を紡ぐ。</p>
         <p class="fk-summary">語りの迫力と三味線の響きが出会う、富士の一日。<br>ゲストはオレンジマジシャンニシオ。</p>
