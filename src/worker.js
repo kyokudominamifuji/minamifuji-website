@@ -71,16 +71,30 @@ function renderEvent(e) {
       </article>`;
 }
 
+function noUpcomingEventMarkup(unavailable = false) {
+  const ja = unavailable
+    ? "公演予定を一時的に取得できません。時間をおいて再度ご覧いただくか、Instagramで最新のお知らせをご確認ください。"
+    : "現在、掲載中の公演予定はありません。新しいお知らせはInstagramでもご案内しています。";
+  const en = unavailable
+    ? "The performance schedule is temporarily unavailable. Please try again later or check Instagram for updates."
+    : "There are no upcoming performances listed right now. Please check Instagram for news.";
+  return '<div class="event-empty" role="status">' +
+    '<p data-ja="' + esc(ja) + '" data-en="' + esc(en) + '">' + esc(ja) + '</p>' +
+    '<div class="event-empty-links"><a href="https://www.instagram.com/373.fuji/" target="_blank" rel="noopener noreferrer" data-ja="Instagramで活動を見る ↗" data-en="View Instagram ↗">Instagramで活動を見る ↗</a>' +
+    '<a href="mailto:373fuji@gmail.com?subject=%E8%AC%9B%E8%AB%87%E5%85%AC%E6%BC%94%E3%81%AE%E3%81%94%E6%A1%88%E5%86%85" data-ja="公演について問い合わせる ↗" data-en="Ask about performances ↗">公演について問い合わせる ↗</a></div>' +
+    '</div>';
+}
+
 async function upcomingEventsMarkup() {
   try {
     const minute = Math.floor(Date.now() / 60000);
     const res = await fetch(`${EVENTS_URL}?v=${minute}`, {
       headers: { "cache-control": "no-cache" }
     });
-    if (!res.ok) return null;
+    if (!res.ok) return noUpcomingEventMarkup(true);
 
     const events = await res.json();
-    if (!Array.isArray(events)) return null;
+    if (!Array.isArray(events)) return noUpcomingEventMarkup(true);
 
     const today = tokyoToday();
     const upcoming = events
@@ -88,12 +102,13 @@ async function upcomingEventsMarkup() {
       .sort((a, b) => a.date.localeCompare(b.date));
 
     if (!upcoming.length) {
-      return `<div class="event-empty" data-ja="現在、掲載中の公演情報はありません。次回公演をお楽しみに。" data-en="There are no upcoming performances listed at the moment.">現在、掲載中の公演情報はありません。次回公演をお楽しみに。</div>`;
+      return noUpcomingEventMarkup(false);
     }
 
     return upcoming.map(renderEvent).join("\n");
   } catch {
-    return null;
+    // Never reveal the old hardcoded show/booking form when upstream data fails.
+    return noUpcomingEventMarkup(true);
   }
 }
 
@@ -114,9 +129,7 @@ export default {
       .replace("講談会・イベント出演、大学・文化施設での講演、ワークショップ、取材・企画のご相談はメールでお問い合わせください。", "講談会・イベント出演、文化施設などでの講演、ワークショップ、取材・企画のご相談はメールでお問い合わせください。");
 
     const eventsMarkup = await upcomingEventsMarkup();
-    if (eventsMarkup) {
-      html = html.replace(/<article class="event">[\s\S]*?<\/article>/, eventsMarkup);
-    }
+    html = html.replace(/<article class="event">[\s\S]*?<\/article>/, eventsMarkup);
 
     const fix = `
 <style id="site-runtime-fixes">
@@ -269,6 +282,9 @@ export default {
     .event[data-event-id="2026-11-01-minamifuji-sakurako"] .event-actions {flex-direction: column;align-items:stretch;}
   }
 
+  .event-empty p{margin:0 0 15px;line-height:1.85}
+  .event-empty-links{display:flex;gap:12px 24px;flex-wrap:wrap}
+  .event-empty-links a{font-size:.9rem;font-weight:700;color:var(--red);text-decoration:underline;text-underline-offset:4px}
   .event-empty {
     border-top: 1px solid var(--ink);
     border-bottom: 1px solid var(--ink);
