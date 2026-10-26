@@ -32,6 +32,13 @@ body.is-performing{overflow:hidden}
 }
 @media(max-height:640px){.praise-layer{bottom:150px}.recipient{font-size:21px}.quote{font-size:20px}.stamp{font-size:16px;margin-top:8px}.praise-call{font-size:12px;padding:5px 9px}.praise-call.loud{font-size:16px}.performance{top:46%;max-height:42%;overflow:auto}}
 @media(prefers-reduced-motion:reduce){.praise-call{animation:praiseStill 6s linear both!important}@keyframes praiseStill{0%,100%{opacity:0}12%,85%{opacity:1}}}
+
+.new .stamp{animation:stamp .16s ease-in both}
+.gift-dialog{width:min(480px,calc(100% - 32px));max-height:90dvh;overflow:auto;border:1px solid var(--line);padding:26px;background:var(--paper);color:var(--ink);box-shadow:0 20px 90px #0005}
+.gift-dialog::backdrop{background:#292b2777}.gift-dialog h2{font-size:24px;margin:0 0 12px}.gift-dialog p{font-size:13px}
+.gift-dialog .field input{font-size:22px}.gift-dialog .primary{font-size:16px}
+.gift-dialog button:disabled{opacity:.5;cursor:not-allowed}.gift-dialog .gift-preview{padding:15px;background:#fff9ec;border:1px solid var(--line);overflow-wrap:anywhere;margin:18px 0}
+.gift-dialog .gift-actions{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-top:18px}.gift-dialog a{font-size:13px;color:var(--red)}.gift-dialog .gift-status{color:var(--red);font-size:12px}
 </style>
 </head>
 <body>
@@ -65,7 +72,7 @@ body.is-performing{overflow:hidden}
 <div class="controls" aria-label="楽しみ方">
 <button id="autoButton" class="control" type="button" aria-pressed="false">一時停止</button>
 <button id="soundButton" class="control" type="button" aria-pressed="false">張り扇の音：オフ</button>
-<button id="shareButton" class="control share" type="button">この一席を贈る ↗</button>
+<button id="shareButton" class="control share" type="button">誰かを褒める・贈る ↗</button>
 </div>
 <p class="stage-note">褒め言葉が次々と届きます。ひと休みしたいときは「一時停止」。</p>
 <div id="liveMessage" class="sr-only" aria-live="polite" aria-atomic="true"></div>
@@ -73,6 +80,18 @@ body.is-performing{overflow:hidden}
 <footer><span>小さな頑張りに、大きな拍手。</span><a href="https://kyokudominamifuji.com/">ホームページへ ↗</a></footer>
 </div>
 <div id="toast" class="toast" role="status" hidden></div>
+<dialog id="giftDialog" class="gift-dialog" aria-labelledby="giftTitle">
+<h2 id="giftTitle">誰を褒めて贈りますか？</h2>
+<p>相手がリンクを開くと、その人への褒め言葉がすぐに始まります。最初は音なしです。</p>
+<form id="giftForm">
+<label for="giftRecipient">贈りたい相手のお名前</label>
+<div class="field"><input id="giftRecipient" maxlength="20" required placeholder="例：太郎" autocomplete="off"><span>殿</span></div>
+<p id="giftPreview" class="gift-preview"></p>
+<p id="giftStatus" class="gift-status" role="status"></p>
+<button id="shareConfirm" class="primary" type="submit">リンクを共有する</button>
+</form>
+<div class="gift-actions"><a id="tryGift" target="_blank" rel="noopener">受け取り画面を試す ↗</a><button id="closeGift" class="control" type="button">戻る</button></div>
+</dialog>
 <noscript><p>このゲームを遊ぶには、ブラウザのJavaScriptを有効にしてください。</p></noscript>
 <script>
 (() => {
@@ -105,11 +124,12 @@ const phrases = [
 ['本日の頑張り、しかと承った。ここに大きな拍手を送る！','大喝采']
 ];
 const $ = id => document.getElementById(id);
-const ui = Object.fromEntries(['setupPage','setupForm','personName','stage','recipient','quote','stamp','count','performance','nextButton','backButton','homeLink','autoButton','soundButton','shareButton','liveMessage','toast','giftNotice','praiseLayer'].map(id => [id,$(id)]));
+const ui = Object.fromEntries(['setupPage','setupForm','personName','stage','recipient','quote','stamp','count','performance','nextButton','backButton','homeLink','autoButton','soundButton','shareButton','liveMessage','toast','giftNotice','praiseLayer','giftDialog','giftForm','giftRecipient','giftPreview','giftStatus','shareConfirm','tryGift','closeGift'].map(id => [id,$(id)]));
 const clean = value => Array.from((value || '').trim().replace(/\s+/g,' ')).slice(0,20).join('');
 const addressed = name => /殿$/.test(name) ? name : name + '殿';
 let name = '', index = -1, count = 0, active = false, auto = true, sound = false;
-let bubbleTimer = null, suspended = false;
+let bubbleTimer = null, suspended = false, impactArmed = false;
+let giftPhrase = 0, resumeAfterGift = false;
 const reducedMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches || false;
 let timer = null, toastTimer = null, audio = null, deck = [], giftIndex = null;
 
@@ -153,7 +173,7 @@ function draw() {
   return deck.pop();
 }
 function strike() {
-  if (!sound || !active || !audio || audio.state !== 'running') return;
+  if (!sound || !active || document.hidden || suspended || ui.giftDialog.open || !audio || audio.state !== 'running') return;
   try {
     const length = Math.floor(audio.sampleRate * .085);
     const buffer = audio.createBuffer(1,length,audio.sampleRate);
@@ -173,11 +193,13 @@ function present(selected) {
   count++; ui.recipient.textContent = addressed(name) + '！'; ui.quote.textContent=text;
   ui.stamp.textContent=stamp;ui.count.textContent='第' + count + '席';
   ui.liveMessage.textContent=addressed(name)+'！ '+text;
+  impactArmed = sound && !reducedMotion;
   ui.performance.classList.remove('new');void ui.performance.offsetWidth;ui.performance.classList.add('new');
-  strike();
+  if (reducedMotion) strike();
 }
 function schedule() {
   clearTimers();
+  if (!auto || document.hidden || suspended) impactArmed = false;
   ui.stage.classList.toggle('paused', !auto);
   ui.stage.classList.toggle('suspended', document.hidden || suspended);
   if (active && auto && !document.hidden && !suspended) {
@@ -200,30 +222,60 @@ function start(event) {
   window.scrollTo(0,0);ui.recipient.focus({preventScroll:true});
 }
 function back(event) {
-  event?.preventDefault();active=false;clearTimers();
+  event?.preventDefault();active=false;impactArmed=false;clearTimers();
   ui.praiseLayer.replaceChildren();document.body.classList.remove("is-performing");
   ui.stage.hidden=true;ui.setupPage.hidden=false;ui.personName.focus();
 }
-function giftUrl() {
-  const url=new URL(location.href);url.search='';url.hash=new URLSearchParams({gift:'1',to:name,p:String(index)}).toString();
+function giftUrl(recipient, phrase = giftPhrase) {
+  const url=new URL(location.href);url.search='';
+  url.hash=new URLSearchParams({gift:'1',to:recipient,p:String(phrase)}).toString();
   return url.toString();
 }
-async function share() {
-  if (!active) return;
-  const title='お見事！｜あなたを褒める講談';
-  const text=addressed(name)+'！ '+phrases[index][0];
-  const published=/^https?:$/.test(location.protocol) && !['localhost','127.0.0.1','[::1]'].includes(location.hostname);
-  const url=published?giftUrl():null;
-  const payload=url?{title,text,url}:{title,text};
-  if(navigator.share) {
-    try{await navigator.share(payload);return;}catch(error){if(error.name==='AbortError')return;}
-  }
-  const copy=url?text+'\n'+url:text;
-  try{
-    if(!navigator.clipboard || !window.isSecureContext)throw new Error('clipboard unavailable');
-    await navigator.clipboard.writeText(copy);toast(url?'この一席のリンクをコピーしました。':'褒め言葉をコピーしました。リンクは公開後に贈れます。');
-  }catch(_){window.prompt('コピーして贈ってください。',copy);}
+function isPublished() {
+  return /^https?:$/.test(location.protocol) && !['localhost','127.0.0.1','[::1]'].includes(location.hostname);
 }
+function updateGiftPreview() {
+  const recipient=clean(ui.giftRecipient.value);
+  ui.giftPreview.textContent=recipient ? addressed(recipient)+'！ '+phrases[giftPhrase][0] : '相手の名前を入れてください。';
+  ui.shareConfirm.disabled=!recipient || !isPublished();
+  if(recipient)ui.tryGift.href=giftUrl(recipient);
+  else ui.tryGift.removeAttribute('href');
+  ui.giftStatus.textContent=isPublished() ? '共有先でLINEを選ぶか、コピーしたリンクを貼り付けてください。' : 'この試作はまだ未公開です。送信は公開後に使えます。下のリンクで受け取り画面を試せます。';
+}
+function openGift() {
+  if(!active)return;
+  giftPhrase=index;resumeAfterGift=auto;auto=false;impactArmed=false;updateButtons();schedule();
+  ui.giftRecipient.value=name;
+  ui.giftRecipient.setCustomValidity('');
+  updateGiftPreview();ui.giftDialog.showModal();ui.giftRecipient.focus();
+}
+function closeGift() { ui.giftDialog.close(); }
+async function share(event) {
+  event.preventDefault();
+  const recipient=clean(ui.giftRecipient.value);
+  if(!recipient){ui.giftRecipient.setCustomValidity('相手のお名前を入れてください。');ui.giftRecipient.reportValidity();return;}
+  if(!isPublished()){updateGiftPreview();return;}
+  const url=giftUrl(recipient);
+  const title='お見事！｜あなたを褒める講談';
+  const text=addressed(recipient)+'へ、褒める講談を贈ります。リンクを開くと始まります。';
+  if(navigator.share) {
+    try{await navigator.share({title,text,url});ui.giftStatus.textContent='共有しました。';return;}
+    catch(error){if(error.name==='AbortError')return;}
+  }
+  try {
+    if(!navigator.clipboard || !window.isSecureContext)throw new Error('clipboard unavailable');
+    await navigator.clipboard.writeText(text+'\n'+url);
+    ui.giftStatus.textContent='リンクをコピーしました。LINEのトークに貼り付けて送ってください。';
+  }catch(_){window.prompt('このリンクをコピーして贈ってください。',url);}
+}
+ui.stamp.addEventListener('animationend',event=>{
+  if(event.animationName!=='stamp' || !impactArmed)return;
+  impactArmed=false;strike();
+});
+ui.giftRecipient.addEventListener('input',()=>{ui.giftRecipient.setCustomValidity('');updateGiftPreview();});
+ui.giftForm.addEventListener('submit',share);
+ui.closeGift.addEventListener('click',closeGift);
+ui.giftDialog.addEventListener('close',()=>{auto=resumeAfterGift;updateButtons();schedule();ui.shareButton.focus();});
 ui.setupForm.addEventListener('submit',start);
 ui.personName.addEventListener('input',()=>{ui.personName.setCustomValidity('');giftIndex=null;});
 ui.nextButton.addEventListener('click',()=>{present();for(let i=0;i<3;i++)spawnCall(true);schedule();});
@@ -233,20 +285,21 @@ ui.soundButton.addEventListener('click',async()=>{
   sound=!sound;updateButtons();if(!sound)return;
   try{
     const Audio=window.AudioContext||window.webkitAudioContext;if(!Audio)throw new Error('unsupported');
-    if(!audio)audio=new Audio();await audio.resume();strike();
+    if(!audio)audio=new Audio();await audio.resume();
   }catch(_){sound=false;updateButtons();toast('このブラウザでは音を再生できません。');}
 });
-ui.shareButton.addEventListener('click',share);
+ui.shareButton.addEventListener('click',openGift);
 document.addEventListener('visibilitychange',schedule);
 window.addEventListener('pagehide',()=>{suspended=true;schedule();});
 window.addEventListener('pageshow',()=>{suspended=false;schedule();});
-window.addEventListener('keydown',event=>{if(event.key==='Escape'&&active)back();});
+window.addEventListener('keydown',event=>{if(event.key==='Escape'&&active&&!ui.giftDialog.open)back();});
 const params=new URLSearchParams(location.hash.slice(1));
 const to=clean(params.get('to'));
 if(params.get('gift')==='1'&&to){
   ui.personName.value=to;ui.giftNotice.hidden=false;ui.giftNotice.textContent=addressed(to)+'へ、褒める一席が届いています。';
   const p=params.get('p');
   if(p!==null&&/^\d+$/.test(p)&&Number(p)<phrases.length)giftIndex=Number(p);
+  start({preventDefault(){}});
 }
 })();
 </script>
