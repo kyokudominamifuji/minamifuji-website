@@ -1,6 +1,7 @@
 import site from "./seo-worker.js";
 import gameHtml from "./tono-game.js";
 import arigatoHtml from "./arigato-game.js";
+import kodanHtml from "./kodan-game.js";
 import miyakeHtml from "./miyake-game.js";
 import upgradeHomepage from "./homepage-upgrade.js";
 
@@ -29,6 +30,16 @@ export default {
     const path = new URL(request.url).pathname;
     if (path === "/games/tono" || path === "/games/tono/") {
       return new Response(gameHtml, { status: 200, headers: { "content-type": "text/html; charset=utf-8", "cache-control": "no-store, max-age=0, must-revalidate", "x-content-type-options": "nosniff" } });
+    }
+    if (["/games/kodan", "/games/kodan/", "/games/kodan/index.html"].includes(path)) {
+      return new Response(kodanHtml, {
+        status: 200,
+        headers: {
+          "content-type": "text/html; charset=utf-8",
+          "cache-control": "no-store, max-age=0, must-revalidate",
+          "x-content-type-options": "nosniff"
+        }
+      });
     }
     // Dedicated standalone route: Worker otherwise returns the homepage for every path.
     if (path === "/games/arigato" || path === "/games/arigato/" || path === "/games/arigato/index.html") {
