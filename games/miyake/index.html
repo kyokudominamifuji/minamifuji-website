@@ -168,6 +168,20 @@ const templates = [
   n => n+"、今日はいいことが起こりそう！",
   n => "拍手！ 拍手！ "+n+"、大拍手！"
 ];
+const akiyamaTemplates = [
+  n => n+"、『わかりません』は名台詞。でも、みんなが大好きなのはわかってます！",
+  n => n+"、明日のことは『わかりません』。今日の感謝は、はっきり伝えます！",
+  n => n+"、『わかりません』のひと言で、場がふっと和む。いつもありがとう！",
+  n => n+"、麻雀好きのあなたと囲む時間は、三宅組の宝物！",
+  n => n+"、役満よりうれしいのは、みんなで笑えるひとときだね！",
+  n => n+"、今日の三宅組は『ありがとう』の役満です！",
+  n => n+"、スロット好きのあなたへ。今日は感謝の７・７・７を贈ります！",
+  n => n+"、リールが何で止まっても、仲間からの『ありがとう』は止まりません！",
+  n => n+"、実家のお豆腐屋さんの話も、あなたとの大切な思い出のひとつ！",
+  n => n+"、実家はお豆腐屋さん。三宅組では、笑顔をつなぐ大切な仲間！",
+  n => n+"、豆腐のようにやさしい味わいのその存在に、ほっとするよ！",
+  n => n+"、麻雀もスロットも好き。みんなは、そんなあなたと遊ぶ時間が大好き！"
+];
 const mini = [
   "ありがとう！","今日も最高！","いい笑顔！","大感謝！",
   "花まる！","ナイス！","感謝の嵐！","ありがとう😊","お疲れさま！",
@@ -208,8 +222,9 @@ function makeButtons() {
   });
 }
 function newPhrase() {
+  const pool = selected === "秋山くん" ? templates.concat(akiyamaTemplates) : templates;
   let text = "", attempts = 0;
-  do { text = pick(templates)(selected); attempts += 1; }
+  do { text = pick(pool)(selected); attempts += 1; }
   while (recent.includes(text) && attempts < 12);
   recent.push(text);
   if (recent.length > 13) recent.shift();
