@@ -203,13 +203,22 @@ function toast(msg) {
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => {el.toast.hidden = true;}, 3000);
 }
+const isAkiyama = () => selected === "秋山くん";
+const showerWord = () => isAkiyama() ? "わかりません" : "ありがとう";
+const personalize = text => isAkiyama() ? text.replaceAll("ありがとう", "わかりません") : text;
+function updateCount(text) {
+  if (isAkiyama()) count += (text.match(/わかりません/g) || []).length;
+  else count++;
+  el.count.textContent = showerWord()+" "+count+" 回";
+}
 function choose(name) {
   if (!MEMBERS.includes(name)) return;
   selected = name;
   for (const btn of el.grid.querySelectorAll("button")) {
     btn.setAttribute("aria-pressed", String(btn.dataset.name === name));
   }
-  el.info.textContent = name + "に、ありがとうを届けます😊";
+  el.info.textContent = name + "に、"+showerWord()+"を届けます😊";
+  el.start.textContent = "💗 "+showerWord()+"を浴びる！";
   el.start.disabled = false;
 }
 function makeButtons() {
@@ -228,7 +237,7 @@ function newPhrase() {
   while (recent.includes(text) && attempts < 12);
   recent.push(text);
   if (recent.length > 13) recent.shift();
-  return text;
+  return personalize(text);
 }
 function stopTimers() {
   clearInterval(mainTimer);clearInterval(bubbleTimer);
@@ -288,7 +297,7 @@ function bubble(){
   const b=document.createElement("div");
   b.className="bubble "+pick(["sun","mint","lav",""]);
   if(Math.random()<.16)b.classList.add("big");
-  b.textContent=pick(mini);
+  b.textContent=isAkiyama()?"わかりません！":pick(mini);
   b.dataset.slot=slot;
   b.style.setProperty("--x",slots[slot][0]+"%");
   b.style.setProperty("--y",slots[slot][1]+"%");
@@ -297,14 +306,15 @@ function bubble(){
   b.style.setProperty("--dur",dur+"ms");
   el.confetti.appendChild(b);
   setTimeout(()=>b.remove(),dur+150);
-  count++;el.count.textContent="ありがとう "+count+" 回";
+  updateCount(b.textContent);
   if(soundMode===1)playSound(false);
 }
 function mainPhrase(){
   if(!active||paused||hiddenPause)return;
   const t=newPhrase();
   el.main.textContent=t;
-  el.sub.textContent=pick(subs);
+  el.sub.textContent=personalize(pick(subs));
+  if(isAkiyama())updateCount(t+el.sub.textContent);
   el.quote.classList.remove("pop");
   void el.quote.offsetWidth;el.quote.classList.add("pop");
   el.announce.textContent=t;
@@ -319,7 +329,8 @@ function timers(){
 function start(){
   if(!MEMBERS.includes(selected))return;
   count=0;recent=[];active=true;paused=false;hiddenPause=false;soundMode=0;
-  el.count.textContent="ありがとう 0 回";
+  el.count.textContent=showerWord()+" 0 回";
+  document.querySelector(".s-badge").textContent=personalize("💗 三宅組のみんな、ありがとう😊");
   el.recipient.textContent=selected+"へ、三宅組から";
   el.confetti.replaceChildren();
   el.entry.hidden=true;el.shower.hidden=false;
@@ -354,8 +365,8 @@ async function share(){
   if(!MEMBERS.includes(selected))return;
   const url=new URL(location.href);
   url.search="";url.hash=new URLSearchParams({to:selected}).toString();
-  const title="三宅組のみんな、ありがとう😊";
-  const text=selected+"へ、三宅組からありがとうを贈ります😊";
+  const title=personalize("三宅組のみんな、ありがとう😊");
+  const text=personalize(selected+"へ、三宅組からありがとうを贈ります😊");
   if(navigator.share){try{await navigator.share({title,text,url:url.href});return;}catch(e){if(e.name==="AbortError")return;}}
   try{
     await navigator.clipboard.writeText(text+"\n"+url.href);
