@@ -1,6 +1,7 @@
 import site from "./seo-worker.js";
 import gameHtml from "./tono-game.js";
 import arigatoHtml from "./arigato-game.js";
+import miyakeHtml from "./miyake-game.js";
 import upgradeHomepage from "./homepage-upgrade.js";
 
 function ensureAssociationLink(html, path) {
@@ -37,6 +38,18 @@ export default {
           "content-type": "text/html; charset=utf-8",
           "cache-control": "no-store, max-age=0, must-revalidate",
           "x-content-type-options": "nosniff"
+        }
+      });
+    }
+    // Miyake-gumi's independent gratitude game; keep the homepage and other games untouched.
+    if (path === "/games/miyake" || path === "/games/miyake/" || path === "/games/miyake/index.html") {
+      return new Response(miyakeHtml, {
+        status: 200,
+        headers: {
+          "content-type": "text/html; charset=utf-8",
+          "cache-control": "no-store, max-age=0, must-revalidate",
+          "x-content-type-options": "nosniff",
+          "x-robots-tag": "noindex, nofollow, noarchive"
         }
       });
     }
