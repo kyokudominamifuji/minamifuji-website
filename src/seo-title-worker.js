@@ -1,5 +1,6 @@
 import site from "./seo-worker.js";
 import gameHtml from "./tono-game.js";
+import paperGameHtml from "./tono-paper-game.js";
 import arigatoHtml from "./arigato-game.js";
 import miyakeHtml from "./miyake-game.js";
 import upgradeHomepage from "./homepage-upgrade.js";
@@ -27,6 +28,14 @@ export default {
   async fetch(request, env, ctx) {
     // Serve the stand-alone Tono no Okimochi game without modifying the homepage.
     const path = new URL(request.url).pathname;
+    // Paper-answer edition: an independent game with its own local save key.
+    if (path === "/games/tono-paper" || path === "/games/tono-paper/" || path === "/games/tono-paper/index.html") {
+      return new Response(paperGameHtml, { status: 200, headers: {
+        "content-type": "text/html; charset=utf-8",
+        "cache-control": "no-store, max-age=0, must-revalidate",
+        "x-content-type-options": "nosniff"
+      } });
+    }
     if (path === "/games/tono" || path === "/games/tono/") {
       return new Response(gameHtml, { status: 200, headers: { "content-type": "text/html; charset=utf-8", "cache-control": "no-store, max-age=0, must-revalidate", "x-content-type-options": "nosniff" } });
     }
