@@ -154,37 +154,6 @@ export default {
       </article>
     </div>
   </div>
-</section>
-
-<section id="backstage" aria-labelledby="backstage-title">
-  <div class="cb-wrap">
-    <div class="backstage-head">
-      <div>
-        <p class="cb-kicker">BACKSTAGE</p>
-        <h2 id="backstage-title" class="cb-title">BACKSTAGE</h2>
-        <p class="cb-lead" data-ja="高座の、その向こう側。" data-en="Beyond the stage.">高座の、その向こう側。</p>
-      </div>
-      <p class="cb-copy" data-ja="稽古、本番前、舞台袖、旅先。一席が生まれるまでには、高座からは見えない時間があります。ここでは、その途中にある小さな物語を残していきます。" data-en="Rehearsals, the moments before a performance, the wings, the road. Every story on stage is shaped by unseen hours. Here we keep a record of those smaller stories along the way.">稽古、本番前、舞台袖、旅先。一席が生まれるまでには、高座からは見えない時間があります。ここでは、その途中にある小さな物語を残していきます。</p>
-    </div>
-
-    <div class="backstage-grid">
-      <article class="backstage-card">
-        <span class="cb-no">SCENE 01</span>
-        <h3 data-ja="舞台袖から、学ぶ。" data-en="Learning from the wings.">舞台袖から、学ぶ。</h3>
-        <p data-ja="師匠や先輩の高座を見つめる時間も、次の一席をつくる大切な稽古です。" data-en="Watching masters and senior storytellers from the wings is part of the work that shapes the next performance.">師匠や先輩の高座を見つめる時間も、次の一席をつくる大切な稽古です。</p>
-      </article>
-      <article class="backstage-card">
-        <span class="cb-no">SCENE 02</span>
-        <h3 data-ja="一席の前に。" data-en="Before the story begins.">一席の前に。</h3>
-        <p data-ja="張り扇、釈台、声、呼吸。本番直前まで続く準備の時間にも、講談師の物語があります。" data-en="The harisen, the shakudai, the voice, the breath. Even the final moments of preparation carry a story of their own.">張り扇、釈台、声、呼吸。本番直前まで続く準備の時間にも、講談師の物語があります。</p>
-      </article>
-      <article class="backstage-card">
-        <span class="cb-no">SCENE 03</span>
-        <h3 data-ja="道の途中を、残す。" data-en="Recording the journey.">道の途中を、残す。</h3>
-        <p data-ja="完成した姿だけではなく、迷い、試し、少しずつ前へ進む過程も。南不二の現在地を記録していきます。" data-en="Not only the finished performance, but the experiments, uncertainty and small steps forward — a record of where Minamifuji is now.">完成した姿だけではなく、迷い、試し、少しずつ前へ進む過程も。南不二の現在地を記録していきます。</p>
-      </article>
-    </div>
-  </div>
 </section>`;
 
     if (!html.includes('id="challenge"')) {
