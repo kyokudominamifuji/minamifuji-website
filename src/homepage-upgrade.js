@@ -95,11 +95,30 @@ export default function upgradeHomepage(html,path) {
     const heroNext = '<aside class="mf-hero-next" aria-label="' + (en?'Next performance':'次回の公演') + '"><span>' + (en?'NEXT PERFORMANCE':'次回の公演') + '</span><a href="#stage"><b>' + year + '.' + day + '</b> ' + title + ' <i aria-hidden="true">↗</i></a></aside>';
     html = html.replace('<div class="actions">',heroNext+'\n<div class="actions">');
   }
+
+  // A direct Instagram entry beside the homepage's main calls to action.
+  const instagramIcon = '<svg class="mf-instagram-icon" viewBox="0 0 32 32" width="32" height="32" aria-hidden="true" focusable="false"><defs><radialGradient id="mf-ig-gradient" cx="30%" cy="105%" r="120%"><stop offset="0" stop-color="#ffdc55"/><stop offset=".3" stop-color="#ff543e"/><stop offset=".6" stop-color="#c837ab"/><stop offset="1" stop-color="#4168c9"/></radialGradient></defs><rect width="32" height="32" rx="8" fill="url(#mf-ig-gradient)"/><rect x="7" y="7" width="18" height="18" rx="5.5" fill="none" stroke="#fff" stroke-width="2"/><circle cx="16" cy="16" r="4.5" fill="none" stroke="#fff" stroke-width="2"/><circle cx="22" cy="10.5" r="1.3" fill="#fff"/></svg>';
+  const instagramLink = '<div class="mf-hero-social"><a class="mf-instagram-link" href="https://www.instagram.com/373.fuji/" target="_blank" rel="noopener noreferrer">' +
+    instagramIcon + '<span class="mf-instagram-label"><strong>Instagram</strong><span class="mf-instagram-copy" data-ja="日々の活動はこちら" data-en="Follow daily updates">' +
+    (en ? 'Follow daily updates' : '日々の活動はこちら') + '</span></span><span class="mf-instagram-arrow" aria-hidden="true">↗</span></a></div>';
+  html = html.replace(/(<section class="hero">[\s\S]*?<div class="actions">[\s\S]*?<\/div>)/, '$1\n' + instagramLink);
+
   const dock = '<nav class="mf-dock" aria-label="' + (en?'Quick access':'クイックメニュー') + '"><a class="mf-dock-shows" href="#stage">' + (en?'Show dates':'公演を見る') + '</a><a class="mf-dock-primary" href="#stage">' + (en?'Performances':'公演を観る') + ' ↗</a></nav>';
   html = html.replace("</body>", dock+"\n</body>");
 
   const style = `
 <style id="mf-homepage-upgrade-v2">
+
+.hero .mf-hero-social{margin-top:18px}
+.hero .mf-instagram-link{display:inline-flex;align-items:center;gap:11px;min-height:48px;max-width:100%;padding:8px 12px;color:#f4eee5;text-decoration:none;border:1px solid rgba(255,255,255,.22);border-radius:8px;background:rgba(18,17,15,.65);text-align:left}
+.hero .mf-instagram-icon{display:block;width:32px;height:32px;flex:0 0 32px}
+.hero .mf-instagram-label{display:flex;align-items:baseline;flex-wrap:wrap;gap:3px 10px;min-width:0;line-height:1.6}
+.hero .mf-instagram-label strong{font-family:system-ui,sans-serif;font-size:.88rem;letter-spacing:.01em}
+.hero .mf-instagram-copy{font-size:.8rem;color:#e0d6c7}
+.hero .mf-instagram-arrow{font-size:1rem;flex-shrink:0}
+.hero .mf-instagram-link:hover{border-color:#e1b487;background:rgba(255,255,255,.1)}
+.hero .mf-instagram-link:focus-visible{outline:3px solid #d8b270;outline-offset:4px}
+
 html{scroll-padding-top:95px}
 body{overflow-x:hidden}
 header{background:rgba(19,18,16,.95)!important;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.12)}
