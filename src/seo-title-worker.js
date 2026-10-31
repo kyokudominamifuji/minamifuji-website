@@ -1,3 +1,4 @@
+import igaSubtitlesHtml from "./iga-subtitles.js";
 import site from "./seo-worker.js";
 import gameHtml from "./tono-game.js";
 import paperGameHtml from "./tono-paper-game.js";
@@ -76,6 +77,15 @@ export default {
   async fetch(request, env, ctx) {
     // Serve the stand-alone Tono no Okimochi game without modifying the homepage.
     const path = new URL(request.url).pathname;
+    if (["/subtitles/iga", "/subtitles/iga/", "/subtitles/iga/index.html"].includes(path)) {
+      return new Response(igaSubtitlesHtml, { headers: {
+        "content-type": "text/html; charset=utf-8",
+        "cache-control": "no-store",
+        "permissions-policy": "microphone=(self)",
+        "x-content-type-options": "nosniff",
+        "x-robots-tag": "noindex, nofollow, noarchive"
+      } });
+    }
     // Paper-answer edition: an independent game with its own local save key.
     if (path === "/games/tono-paper" || path === "/games/tono-paper/" || path === "/games/tono-paper/index.html") {
       return new Response(paperGameHtml, { status: 200, headers: {
