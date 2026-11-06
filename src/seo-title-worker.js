@@ -1,4 +1,5 @@
 import igaSubtitlesHtml from "./iga-subtitles.js";
+import classSubtitlesHtml from "./class-subtitles.js";
 import site from "./seo-worker.js";
 import gameHtml from "./tono-game.js";
 import paperGameHtml from "./tono-paper-game.js";
@@ -79,6 +80,16 @@ export default {
     const path = new URL(request.url).pathname;
     if (["/subtitles/iga", "/subtitles/iga/", "/subtitles/iga/index.html"].includes(path)) {
       return new Response(igaSubtitlesHtml, { headers: {
+        "content-type": "text/html; charset=utf-8",
+        "cache-control": "no-store",
+        "permissions-policy": "microphone=(self)",
+        "x-content-type-options": "nosniff",
+        "x-robots-tag": "noindex, nofollow, noarchive"
+      } });
+    }
+    // Classroom live subtitles (Japanese / English / Traditional Chinese), separate from the Kodan subtitles.
+    if (["/subtitles/class", "/subtitles/class/", "/subtitles/class/index.html"].includes(path)) {
+      return new Response(classSubtitlesHtml, { headers: {
         "content-type": "text/html; charset=utf-8",
         "cache-control": "no-store",
         "permissions-policy": "microphone=(self)",
