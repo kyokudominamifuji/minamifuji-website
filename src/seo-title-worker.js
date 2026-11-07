@@ -76,6 +76,60 @@ function applyNovemberNotice(html, path) {
   return html.replace("</head>", '<style id="mf-november-change">.mf-change-notice{margin:22px 0;padding:18px 20px;border:1px solid #b86542;border-left:4px solid #a13d28;background:#fff7e9;color:#30251e;font:400 .9rem/1.85 system-ui,sans-serif;overflow-wrap:anywhere;letter-spacing:normal}.mf-change-notice strong{display:block;color:#922e22;font-size:1rem}.mf-change-notice p{margin:9px 0 0}.mf-change-notice a{text-decoration:underline;color:#822b21}.fk-hero-grid,.fk-people-grid{grid-template-columns:minmax(0,1fr)}.fk-hero-grid>div{max-width:850px}.fk-title .mf-magic-name{font-size:.62em}.event[data-event-id="2026-11-01-minamifuji-sakurako"]>div:nth-child(2){grid-template-columns:minmax(0,1fr)!important}</style></head>');
 }
 
+// ---------------------------------------------------------------------------
+// 存在するページの一覧。ここに無いURLは「ページが見つかりません（404）」になる。
+// 新しいページ（例: /events/2027-01-23）を追加したら、ここにも追記すること。
+// 画像などの静的ファイルは assets/ から Cloudflare が直接配信するので不要。
+// ゲーム・字幕ページは下の fetch() 内で個別に処理しているので不要。
+// ---------------------------------------------------------------------------
+const KNOWN_PAGES = new Set([
+  "/",
+  "/en",
+  "/en/",
+  "/robots.txt",
+  "/sitemap.xml",
+  "/events/2026-11-01",
+  "/events/2026-11-01/"
+]);
+
+function notFoundResponse(path) {
+  const en = path === "/en" || path.startsWith("/en/");
+  const home = en ? "/en/" : "/";
+  const html = `<!doctype html>
+<html lang="${en ? "en" : "ja"}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>${en ? "Page not found" : "ページが見つかりません"}｜旭堂南不二 Kyokudo Minamifuji</title>
+<style>
+body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;background:#131210;color:#f4efe6;font-family:"Hiragino Mincho ProN","Yu Mincho","Noto Serif JP",serif;text-align:center;padding:24px;box-sizing:border-box}
+.k{color:#dfc48f;letter-spacing:.2em;font-size:.8rem;font-family:system-ui,sans-serif}
+h1{font-weight:500;font-size:clamp(1.6rem,6vw,2.4rem);margin:.6em 0}
+p{line-height:1.9;opacity:.85}
+a{display:inline-block;margin-top:1.4em;padding:12px 22px;border:1px solid #dfc48f;color:#dfc48f;text-decoration:none;font-family:system-ui,sans-serif}
+a:hover{background:#dfc48f;color:#131210}
+</style>
+</head>
+<body>
+<main>
+<div class="k">404 NOT FOUND</div>
+<h1>${en ? "This page could not be found." : "お探しのページは見つかりませんでした。"}</h1>
+<p>${en ? "The page may have moved or no longer exists." : "ページが移動したか、公開を終了した可能性があります。"}</p>
+<a href="${home}">${en ? "Back to the home page" : "トップページへ戻る"}</a>
+</main>
+</body>
+</html>`;
+  return new Response(html, {
+    status: 404,
+    headers: {
+      "content-type": "text/html; charset=utf-8",
+      "cache-control": "no-store",
+      "x-content-type-options": "nosniff"
+    }
+  });
+}
+
 export default {
   async fetch(request, env, ctx) {
     // Serve the stand-alone Tono no Okimochi game without modifying the homepage.
@@ -144,6 +198,12 @@ export default {
         }
       });
     }
+    // 旧URL /index.html はトップページへ転送。
+    if (path === "/index.html") return Response.redirect(new URL("/", request.url).toString(), 301);
+    if (path === "/en/index.html") return Response.redirect(new URL("/en/", request.url).toString(), 301);
+    // 存在しないURLにトップページを返さず、404を返す（検索エンジンの重複判定対策）。
+    if (!KNOWN_PAGES.has(path)) return notFoundResponse(path);
+
     const response = await site.fetch(request, env, ctx);
     const contentType = response.headers.get("content-type") || "";
     if (!contentType.includes("text/html")) return response;

@@ -29,7 +29,7 @@ export default {
     .navlinks a,.lang{color:#fff}
     .lang{border:1px solid rgba(255,255,255,.45);background:rgba(0,0,0,.12);padding:8px 12px;border-radius:99px;cursor:pointer}
     .hero{min-height:100svh;position:relative;display:grid;align-items:end;overflow:hidden;background:#11100d}
-    .hero:before{content:"";position:absolute;top:0;right:0;bottom:0;left:42%;background:url("https://raw.githubusercontent.com/kyokudominamifuji/minamifuji-website/main/9DE0020E-0A9D-417A-B768-D430D0992E62.png") center 22%/cover no-repeat}
+    .hero:before{content:"";position:absolute;top:0;right:0;bottom:0;left:42%;background:url("/images/profile/minamifuji-main.webp") center 22%/cover no-repeat}
     .hero:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#11100d 0%,#11100d 33%,rgba(17,16,13,.88) 42%,rgba(17,16,13,.22) 67%,rgba(17,16,13,.08) 100%)}
     .hero-inner{position:relative;z-index:2;color:#fff;padding:22vh 0 9vh;max-width:1180px}
     .hero-inner>*{max-width:560px}
@@ -72,7 +72,7 @@ export default {
     .reserve{display:inline-block;margin-top:18px;border-bottom:1px solid var(--ink);font-weight:700}
     .profile{background:var(--paper2)}
     .profile-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:72px;align-items:start}
-    .portrait{min-height:520px;background:url("https://raw.githubusercontent.com/kyokudominamifuji/minamifuji-website/main/9DE0020E-0A9D-417A-B768-D430D0992E62.png") center 24%/cover no-repeat;position:relative}
+    .portrait{min-height:520px;background:url("/images/profile/minamifuji-main.webp") center 24%/cover no-repeat;position:relative}
     .portrait:after{content:"不二";position:absolute;right:18px;bottom:-12px;color:rgba(255,255,255,.92);font-family:"Yu Mincho",serif;font-size:7rem;line-height:1}
     .profile-copy{font-family:"Yu Mincho","Hiragino Mincho ProN",serif;font-size:1.06rem}
     .profile-copy p{margin-top:0;margin-bottom:22px}

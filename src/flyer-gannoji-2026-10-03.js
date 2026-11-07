@@ -1,1 +1,1 @@
-export default "https://raw.githubusercontent.com/kyokudominamifuji/minamifuji-website/main/IMG_0844.jpeg";
+export default "/images/flyers/2026-10-03-gannoji-kodankai.jpeg";

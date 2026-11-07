@@ -20,7 +20,7 @@
     "reservation_url": "tel:+819019038389",
     "reservation_label_ja": "お問い合わせ 090-1903-8389 ↗",
     "reservation_label_en": "Inquiry +81-90-1903-8389 ↗",
-    "flyer_url": "https://raw.githubusercontent.com/kyokudominamifuji/minamifuji-website/main/IMG_0843.jpeg",
+    "flyer_url": "/images/flyers/2026-09-21-tenma-kodanseki.jpeg",
     "program_ja": "旭堂南不二『角屋船の由来』／ 旭堂南斗『瓢箪屋裁き』／ 旭堂南慶『八丈島物語』／ 中入り ／ 旭堂南京『三河屋幸吉』／ 旭堂南左衛門『面の餅』",
     "program_en": "Kyokudo Minamifuji — The Origin of Kadoya-bune / Kyokudo Nanto — Hyotanya Sabaki / Kyokudo Nankei — Hachijojima Monogatari / Intermission / Kyokudo Nankyo — Mikawaya Kokichi / Kyokudo Nanzaemon — Men no Mochi"
   },
@@ -45,7 +45,7 @@
     "reservation_url": "mailto:nagoyakoudan@gmail.com?subject=10%2F3%E9%A1%98%E7%8E%8B%E5%AF%BA%E8%AC%9B%E8%AB%87%E4%BC%9A%E4%BA%88%E7%B4%84",
     "reservation_label_ja": "お問い合わせ・ご予約 ↗",
     "reservation_label_en": "Booking inquiry ↗",
-    "flyer_url": "https://raw.githubusercontent.com/kyokudominamifuji/minamifuji-website/main/IMG_0844.jpeg",
+    "flyer_url": "/images/flyers/2026-10-03-gannoji-kodankai.jpeg",
     "program_ja": "旭堂南士『尼崎一騎駆け（前編）』／ 旭堂南不二『尼崎一騎駆け（後編）』／ 旭堂南山『金龍縄張問答』／ 中入り ／ 旭堂南生『天下大乱野郎』／ 旭堂南左衛門『山崎合戦』",
     "program_en": "Kyokudo Nanshi — Amagasaki Ikki-gake (Part 1) / Kyokudo Minamifuji — Amagasaki Ikki-gake (Part 2) / Kyokudo Nanzan — Kinryu Nawabari Mondo / Intermission / Kyokudo Nansei — Tenka Tairan Yaro / Kyokudo Nanzaemon — Battle of Yamazaki"
   },
@@ -117,7 +117,7 @@
     "reservation_url": "mailto:373fuji@gmail.com?subject=%E5%AF%8C%E5%A3%AB%E3%81%A8%E7%A2%A7%E8%AC%9B%E8%AB%87%E5%B8%AD%20%E7%AC%AC10%E5%9B%9E%20%E4%BA%88%E7%B4%84",
     "reservation_label_ja": "メールでお申し込み ↗",
     "reservation_label_en": "Book by email ↗",
-    "flyer_url": "https://raw.githubusercontent.com/kyokudominamifuji/minamifuji-website/main/assets/fuji-to-ao-2026-11-21-2027-01-23.jpeg"
+    "flyer_url": "/images/flyers/2026-11-21-fuji-to-ao-kodanseki.jpeg"
   },
   {
     "id": "2027-01-23-fuji-to-ao",
@@ -140,6 +140,6 @@
     "reservation_url": "mailto:373fuji@gmail.com?subject=%E5%AF%8C%E5%A3%AB%E3%81%A8%E7%A2%A7%E8%AC%9B%E8%AB%87%E5%B8%AD%20%E7%AC%AC11%E5%9B%9E%20%E4%BA%88%E7%B4%84",
     "reservation_label_ja": "メールでお申し込み ↗",
     "reservation_label_en": "Book by email ↗",
-    "flyer_url": "https://raw.githubusercontent.com/kyokudominamifuji/minamifuji-website/main/assets/fuji-to-ao-2026-11-21-2027-01-23.jpeg"
+    "flyer_url": "/images/flyers/2026-11-21-fuji-to-ao-kodanseki.jpeg"
   }
 ]
