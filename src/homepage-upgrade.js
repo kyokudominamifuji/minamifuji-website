@@ -78,7 +78,7 @@ export default function upgradeHomepage(html,path) {
   const en = path !== "/";
   // The same original photo as the desktop background, rendered at its natural
   // aspect ratio on phones so the head is never cropped by background-cover.
-  const mobileHeroPhoto = '<img class="mf-mobile-hero-photo" src="https://raw.githubusercontent.com/kyokudominamifuji/minamifuji-website/main/9DE0020E-0A9D-417A-B768-D430D0992E62.png" alt="講談師・旭堂南不二" decoding="async" fetchpriority="high">';
+  const mobileHeroPhoto = '<img class="mf-mobile-hero-photo" src="/images/profile/minamifuji-main.webp" alt="講談師・旭堂南不二" decoding="async" fetchpriority="high">';
   html = html.replace('<section class="hero">', '<section class="hero">\n' + mobileHeroPhoto);
   const stage = html.match(/<section class="stage" id="stage">[\s\S]*?<\/section>/)?.[0];
   if (stage && /<section class="hero"[\s\S]*?<\/section>/.test(html)) {

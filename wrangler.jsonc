@@ -3,5 +3,7 @@
   "main": "src/seo-title-worker.js",
   "compatibility_date": "2026-09-08",
   "workers_dev": false,
-  "ai": { "binding": "AI" }
+  "ai": { "binding": "AI" },
+  // 画像などの静的ファイルは assets/ から直接配信する（例: assets/images/... → /images/...）
+  "assets": { "directory": "./assets" }
 }

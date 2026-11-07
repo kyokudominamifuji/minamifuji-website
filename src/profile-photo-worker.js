@@ -10,7 +10,7 @@ export default {
     const profilePhotoStyle = `<style id="profile-photo-v2">
       /* TOP画像はそのまま。プロフィール写真は senzai pic.jpg を全体表示 */
       .profile .portrait {
-        background-image:url("https://raw.githubusercontent.com/kyokudominamifuji/minamifuji-website/main/senzai%20pic.jpg")!important;
+        background-image:url("/images/profile/minamifuji-senzai.jpg")!important;
         background-position:center center!important;
         background-size:100% 100%!important;
         background-repeat:no-repeat!important;

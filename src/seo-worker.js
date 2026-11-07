@@ -74,12 +74,15 @@ function seoHead(lang) {
   <meta property="og:title" content="${meta.title}">
   <meta property="og:description" content="${meta.description}">
   <meta property="og:url" content="${meta.url}">
-  <meta property="og:image" content="${ORIGIN}/9DE0020E-0A9D-417A-B768-D430D0992E62.png">
+  <meta property="og:image" content="${ORIGIN}/images/og/minamifuji-og.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="${lang === "ja" ? "講談師 旭堂南不二" : "Kodan storyteller Kyokudo Minamifuji"}">
   <meta property="og:locale" content="${lang === "ja" ? "ja_JP" : "en_US"}">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="${meta.title}">
   <meta name="twitter:description" content="${meta.description}">
-  <meta name="twitter:image" content="${ORIGIN}/9DE0020E-0A9D-417A-B768-D430D0992E62.png">
+  <meta name="twitter:image" content="${ORIGIN}/images/og/minamifuji-og.jpg">
   <script type="application/ld+json">${escapeJsonForHtml(graph)}</script>
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}"></script>

@@ -1,7 +1,7 @@
 import site from "./brand-worker.js";
 
-const FLYER_FRONT_URL = "https://raw.githubusercontent.com/kyokudominamifuji/minamifuji-website/main/futari-kai-2026-11-01-front.png";
-const FLYER_BACK_URL = "https://raw.githubusercontent.com/kyokudominamifuji/minamifuji-website/main/futari-kai-2026-11-01-back.png";
+const FLYER_FRONT_URL = "/images/flyers/2026-11-01-futari-kai-front.png";
+const FLYER_BACK_URL = "/images/flyers/2026-11-01-futari-kai-back.png";
 
 export default {
   async fetch(request, env, ctx) {

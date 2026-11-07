@@ -1,12 +1,12 @@
 import worker from "./worker.js";
 
-const LOGO_URL = "https://raw.githubusercontent.com/kyokudominamifuji/minamifuji-website/main/1DE59A7B-F9B1-46A1-8E04-49435E076147.png";
+const LOGO_URL = "/images/logos/minamifuji-logo.webp";
 const INSTAGRAM_URL = "https://www.instagram.com/373.fuji/";
 const EVENT_FORM_URL = "https://forms.gle/1AqQEx7TZe2fJvqE8";
 
 function eventPage1101() {
-  const front = "https://raw.githubusercontent.com/kyokudominamifuji/minamifuji-website/main/futari-kai-2026-11-01-front.png";
-  const back = "https://raw.githubusercontent.com/kyokudominamifuji/minamifuji-website/main/futari-kai-2026-11-01-back.png";
+  const front = "/images/flyers/2026-11-01-futari-kai-front.png";
+  const back = "/images/flyers/2026-11-01-futari-kai-back.png";
   const page = `<!doctype html>
 <html lang="ja">
 <head>
