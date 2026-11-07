@@ -76,7 +76,7 @@ Reply with JSON only, with exactly these keys: ${keys.map(k => `"${k}"`).join(",
     const user = (context ? `Previous subtitle (context only, do not translate): ${context}\n\n` : "") + `Input: ${text}`;
     const out = await env.AI.run(LLM_MODEL, {
       messages: [{ role: "system", content: system }, { role: "user", content: user }],
-      max_tokens: 600, temperature: 0.2
+      max_tokens: 320, temperature: 0.2
     });
     const data = parseJsonLoose(llmText(out));
     if (data && targets.every(t => typeof data[t] === "string" && data[t].trim())) {
