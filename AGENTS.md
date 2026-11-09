@@ -43,6 +43,7 @@ seo-title-worker → seo-worker → profile-photo-worker → site-worker → cha
 | `/subtitles/api/translate` | subtitle-translate-api.js | Workers AI で翻訳。**利用回数に応じて費用がかかる** |
 | `/subtitles/api/homophones` | subtitle-translate-api.js | 原稿の用語だけ、音声認識の聞き間違い候補を Workers AI で調べる（原稿読込時のみ） |
 | `/subtitles/api/script` | subtitle-translate-api.js | 講談の台本を行ごとに英訳・中訳、あらすじ作成（台本読込時のみ。本番中は使わない） |
+| `/subtitles/api/match` | subtitle-translate-api.js | 語った文と台本の行の意味の近さ（bge-m3）。講談字幕の本番で、字で照合できなかった文だけ呼ぶ |
 
 - **新しいページを追加したら、`src/seo-title-worker.js` の `KNOWN_PAGES` にも追加する**（追加しないと404になる）。
   ゲーム・字幕のように fetch() の先頭で個別に返すページは不要
