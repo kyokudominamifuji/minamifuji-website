@@ -2,7 +2,31 @@
 // Cloudflare Workers AI を使用（wrangler.jsonc の "ai" バインディング）。
 // 入力：{ text, src: "ja"|"en"|"zh", targets: ["en","zh"...], glossary: [{ja,en,zh}], context }
 // 出力：{ source, ja?, en?, zh?, model }
-const LLM_MODEL = "@cf/google/gemma-4-26b-a4b-it";
+// 標準のAI。Gemma 4 は答える前に長く「考える」ため40秒以上かかり、使えなかった（2026-11-09）。
+const LLM_MODEL = "@cf/meta/llama-4-scout-17b-16e-instruct";
+// 速さ比べ用に指定できるAI（これ以外は指定できない）
+const LLM_CHOICES = [
+  "@cf/meta/llama-4-scout-17b-16e-instruct",
+  "@cf/qwen/qwen3-30b-a3b-fp8",
+  "@cf/mistralai/mistral-small-3.1-24b-instruct",
+  "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+  "@cf/google/gemma-4-26b-a4b-it"
+];
+const pickModel = m => LLM_CHOICES.includes(m) ? m : LLM_MODEL;
+async function runLLM(env, model, messages, max_tokens, timeoutMs = 12000) {
+  const t = Date.now();
+  // Qwen3 は /no_think で「考える」を止める
+  if (model.includes("qwen3")) messages = messages.map((m, i) => i === messages.length - 1 ? { ...m, content: m.content + "\n/no_think" } : m);
+  try {
+    const out = await Promise.race([
+      env.AI.run(model, { messages, max_tokens, temperature: 0.2 }),
+      new Promise((_, rej) => setTimeout(() => rej(new Error("timeout " + timeoutMs + "ms")), timeoutMs))
+    ]);
+    return { text: llmText(out), ms: Date.now() - t };
+  } catch (e) {
+    return { text: "", ms: Date.now() - t, error: String(e && e.message || e).slice(0, 200) };
+  }
+}
 const MT_MODEL = "@cf/meta/m2m100-1.2b";
 const NAMES = { ja: "Japanese", en: "English", zh: "Traditional Chinese as used in Taiwan (繁體中文)" };
 const MT_LANG = { ja: "japanese", en: "english", zh: "chinese" };
@@ -75,6 +99,8 @@ async function translateInner(request, env) {
     .map(g => ({ ja: clean(g.ja, 40), en: clean(g.en, 60), zh: clean(g.zh, 40), yomi: clean(g.yomi, 40) }))
     .filter(g => g.ja || g.en || g.zh);
   const context = clean(body.context, 300);
+  const model = pickModel(body.model), debug = !!body.debug;
+  let llmDebug = null;
 
   // 1) LLM：用語集を参考に、聞き間違いを直してから翻訳
   try {
@@ -93,17 +119,16 @@ Tasks:
 2. Translate the corrected source into: ${targets.map(t => `"${t}" = ${NAMES[t]}`).join(", ")}. Use the glossary translations exactly. Keep it natural and concise, suitable for subtitles.
 Reply with JSON only, with exactly these keys: ${keys.map(k => `"${k}"`).join(", ")}.`;
     const user = (context ? `Previous subtitle (context only, do not translate): ${context}\n\n` : "") + `Input: ${text}`;
-    const out = await env.AI.run(LLM_MODEL, {
-      messages: [{ role: "system", content: system }, { role: "user", content: user }],
-      max_tokens: 320, temperature: 0.2
-    });
-    const data = parseJsonLoose(llmText(out));
+    const r = await runLLM(env, model, [{ role: "system", content: system }, { role: "user", content: user }], 320);
+    const data = parseJsonLoose(r.text);
     if (data && targets.every(t => typeof data[t] === "string" && data[t].trim())) {
       const res = { model: "llm", source: typeof data.source === "string" && data.source.trim() ? data.source.trim() : text };
       for (const t of targets) res[t] = data[t].trim();
+      if (debug) res.debug = { model, ms: r.ms };
       return json(res);
     }
-  } catch (e) { /* fall through to MT */ }
+    llmDebug = { model, ms: r.ms, error: r.error || "unparsable", raw: String(r.text || "").slice(0, 300) };
+  } catch (e) { llmDebug = { model, error: String(e).slice(0, 200) }; }
 
   // 2) 予備：機械翻訳モデル（中国語は簡体字になる場合あり）
   try {
@@ -112,6 +137,7 @@ Reply with JSON only, with exactly these keys: ${keys.map(k => `"${k}"`).join(",
       const out = await env.AI.run(MT_MODEL, { text, source_lang: MT_LANG[src], target_lang: MT_LANG[t] });
       res[t] = String(out?.translated_text || "").trim();
     }));
+    if (debug) res.debug = llmDebug;
     return json(res);
   } catch (e) {
     return json({ error: "translation failed" }, 502);
@@ -134,6 +160,7 @@ async function homophonesInner(request, env) {
     .map(t => ({ ja: clean(t.ja, 20), yomi: clean(t.yomi, 30) })).filter(t => t.ja);
   if (!terms.length) return json({ items: [] });
   const context = clean(body.context, 1500);
+  const model = pickModel(body.model), debug = !!body.debug;
   const system =
 `You support a live speech-recognition subtitle tool used for Japanese lectures and kōdan (Japanese storytelling).
 For each Japanese term from the speaker's manuscript, list what Japanese speech recognition might write INSTEAD when the speaker says that term:
@@ -146,17 +173,18 @@ Rules:
 Reply with JSON only: {"items":[{"ja":"...","yomi":"...","confusions":["..."],"risky":false}]} — one item per input term, same order.`;
   const user = (context ? `Manuscript excerpt (for context):\n${context}\n\n` : "") + "Terms:\n" + terms.map(t => "- " + t.ja + (t.yomi ? `（${t.yomi}）` : "")).join("\n");
   try {
-    const out = await env.AI.run(LLM_MODEL, {
-      messages: [{ role: "system", content: system }, { role: "user", content: user }],
-      max_tokens: 2500, temperature: 0.1
-    });
-    const data = parseJsonLoose(llmText(out));
+    const r = await runLLM(env, model, [{ role: "system", content: system }, { role: "user", content: user }], 2000, 45000);
+    const data = parseJsonLoose(r.text);
     const items = (data && Array.isArray(data.items) ? data.items : []).map(it => ({
       ja: clean(it.ja, 20), yomi: clean(it.yomi, 30),
       confusions: (Array.isArray(it.confusions) ? it.confusions : []).map(c => clean(c, 20)).filter(c => c && c !== clean(it.ja, 20)).slice(0, 6),
       risky: !!it.risky
-    })).filter(it => terms.some(t => t.ja === it.ja));
-    return json({ items });
+    }));
+    // 読み付きで返ってきても照合できるように（例：「講談（こうだん）」→「講談」）、順番でも対応づける
+    items.forEach((it, i) => { if (!terms.some(t => t.ja === it.ja)) { const base = it.ja.replace(/[（(].*$/, "").trim(); it.ja = terms.some(t => t.ja === base) ? base : (terms[i] ? terms[i].ja : it.ja); } });
+    const res = { items: items.filter(it => terms.some(t => t.ja === it.ja)) };
+    if (debug) res.debug = { model, ms: r.ms, error: r.error, raw: data ? undefined : String(r.text || "").slice(0, 300) };
+    return json(res);
   } catch (e) {
     return json({ error: "check failed" }, 502);
   }
