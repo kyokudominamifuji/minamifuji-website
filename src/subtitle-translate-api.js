@@ -253,3 +253,36 @@ Reply with JSON only: {"lines":["...", "..."]} with exactly ${lines.length} stri
   if (!out || out.length !== lines.length) return json({ error: "count mismatch", got: out ? out.length : 0, detail: r.error || undefined }, 502);
   return json({ lines: out });
 }
+
+// 語った文と台本の行の「意味の近さ」— POST /subtitles/api/match
+// 入力：{ query, candidates:[…最大80行] }  出力：{ scores:[0〜1…] }（多言語の文ベクトル bge-m3 のコサイン類似度）
+const EMBED_MODEL = "@cf/baai/bge-m3";
+export const handleMatch = (request, env) => withCors(request, matchInner(request, env));
+async function matchInner(request, env) {
+  if (request.method === "OPTIONS") return preflight(request);
+  if (!checkOrigin(request)) return json({ error: "forbidden" }, 403);
+  if (request.method !== "POST") return json({ error: "POST only" }, 405);
+  if (!env || !env.AI) return json({ error: "AI binding is not configured" }, 503);
+  const ip = request.headers.get("cf-connecting-ip") || "unknown";
+  if (limited(ip)) return json({ error: "too many requests" }, 429);
+  let body;
+  try { body = await request.json(); } catch { return json({ error: "bad json" }, 400); }
+  const query = clean(body.query, 300);
+  const cands = (Array.isArray(body.candidates) ? body.candidates : []).slice(0, 80).map(c => clean(c, 300) || "-");
+  if (!query || !cands.length) return json({ error: "empty" }, 400);
+  try {
+    const t = Date.now();
+    const out = await Promise.race([
+      env.AI.run(EMBED_MODEL, { text: [query, ...cands] }),
+      new Promise((_, rej) => setTimeout(() => rej(new Error("timeout")), 8000))
+    ]);
+    const vecs = out && (out.data || out.response);
+    if (!Array.isArray(vecs) || vecs.length !== cands.length + 1) return json({ error: "bad embedding output" }, 502);
+    const norm = v => Math.sqrt(v.reduce((s, x) => s + x * x, 0)) || 1;
+    const q = vecs[0], qn = norm(q);
+    const scores = vecs.slice(1).map(v => { let d = 0; for (let i = 0; i < v.length; i++) d += v[i] * q[i]; return Math.round(d / (qn * norm(v)) * 1000) / 1000; });
+    return json({ scores, ms: Date.now() - t });
+  } catch (e) {
+    return json({ error: "match failed" }, 502);
+  }
+}
