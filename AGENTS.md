@@ -40,6 +40,7 @@ seo-title-worker → seo-worker → profile-photo-worker → site-worker → cha
 | `/subtitles/iga` | iga-subtitles.js | 講談ライブ字幕スタジオ（本人用）。**非公開のまま** |
 | `/subtitles/class` `/subtitles/m` | class-subtitles*.js | 授業ライブ字幕（PC版・スマホ版） |
 | `/subtitles/api/translate` | subtitle-translate-api.js | Workers AI で翻訳。**利用回数に応じて費用がかかる** |
+| `/subtitles/api/homophones` | subtitle-translate-api.js | 原稿の用語だけ、音声認識の聞き間違い候補を Workers AI で調べる（原稿読込時のみ） |
 
 - **新しいページを追加したら、`src/seo-title-worker.js` の `KNOWN_PAGES` にも追加する**（追加しないと404になる）。
   ゲーム・字幕のように fetch() の先頭で個別に返すページは不要
