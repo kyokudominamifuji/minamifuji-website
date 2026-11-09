@@ -39,6 +39,7 @@ seo-title-worker → seo-worker → profile-photo-worker → site-worker → cha
 | `/games/miyake` | miyake-game.js | 三宅組専用。**非公開のまま** |
 | `/subtitles/iga` | iga-subtitles.js | 講談ライブ字幕スタジオ（本人用）。**非公開のまま** |
 | `/subtitles/class` `/subtitles/m` | class-subtitles*.js | 授業ライブ字幕（PC版・スマホ版） |
+| `/subtitles/kodan` | kodan-subtitles.js | 講談ライブ字幕（練習モードつき）。①台本→②練習（台本と字幕を比べてまちがいを自動で見つける）→③本番 |
 | `/subtitles/api/translate` | subtitle-translate-api.js | Workers AI で翻訳。**利用回数に応じて費用がかかる** |
 | `/subtitles/api/homophones` | subtitle-translate-api.js | 原稿の用語だけ、音声認識の聞き間違い候補を Workers AI で調べる（原稿読込時のみ） |
 

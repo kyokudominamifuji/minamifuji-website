@@ -1,6 +1,7 @@
 import igaSubtitlesHtml from "./iga-subtitles.js";
 import classSubtitlesHtml from "./class-subtitles.js";
 import classSubtitlesMobileHtml from "./class-subtitles-mobile.js";
+import kodanSubtitlesHtml from "./kodan-subtitles.js";
 import { handleTranslate, handleHomophones } from "./subtitle-translate-api.js";
 import site from "./seo-worker.js";
 import gameHtml from "./tono-game.js";
@@ -136,6 +137,16 @@ export default {
     const path = new URL(request.url).pathname;
     if (["/subtitles/iga", "/subtitles/iga/", "/subtitles/iga/index.html"].includes(path)) {
       return new Response(igaSubtitlesHtml, { headers: {
+        "content-type": "text/html; charset=utf-8",
+        "cache-control": "no-store",
+        "permissions-policy": "microphone=(self)",
+        "x-content-type-options": "nosniff",
+        "x-robots-tag": "noindex, nofollow, noarchive"
+      } });
+    }
+    // Kodan live subtitles with practice mode (script vs. recognized text).
+    if (["/subtitles/kodan", "/subtitles/kodan/", "/subtitles/kodan/index.html"].includes(path)) {
+      return new Response(kodanSubtitlesHtml, { headers: {
         "content-type": "text/html; charset=utf-8",
         "cache-control": "no-store",
         "permissions-policy": "microphone=(self)",
