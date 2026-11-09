@@ -17,9 +17,28 @@ function limited(ip) {
   if (hits.size > 5000) hits.clear();
   return h.length > max;
 }
+const LOCAL_ORIGIN = /^http:\/\/(localhost|127\.0\.0\.1):87[78]\d$/;
 const json = (obj, status = 200) => new Response(JSON.stringify(obj), {
   status, headers: { "content-type": "application/json; charset=utf-8", "cache-control": "no-store", "x-content-type-options": "nosniff" }
 });
+// パソコン内の起動.cmd（localhost）から呼ばれたときだけ CORS を付ける
+async function withCors(request, promise) {
+  const res = await promise, origin = request.headers.get("origin") || "";
+  if (!LOCAL_ORIGIN.test(origin) || request.method === "OPTIONS") return res;
+  const h = new Headers(res.headers); h.set("access-control-allow-origin", origin); h.set("vary", "origin");
+  return new Response(res.body, { status: res.status, headers: h });
+}
+function checkOrigin(request) {
+  const origin = request.headers.get("origin");
+  if (!origin) return true;
+  if (LOCAL_ORIGIN.test(origin)) return true;
+  try { return new URL(origin).host === new URL(request.url).host; } catch { return false; }
+}
+function preflight(request) {
+  const origin = request.headers.get("origin") || "";
+  if (!LOCAL_ORIGIN.test(origin)) return new Response(null, { status: 403 });
+  return new Response(null, { status: 204, headers: { "access-control-allow-origin": origin, "access-control-allow-methods": "POST", "access-control-allow-headers": "content-type", "access-control-max-age": "86400", "vary": "origin" } });
+}
 const clean = (s, n) => String(s ?? "").replace(/[\u0000-\u001f]/g, " ").trim().slice(0, n);
 
 function parseJsonLoose(s) {
@@ -36,11 +55,11 @@ function llmText(out) {
   return c ? (c.message?.content ?? c.text ?? "") : "";
 }
 
-export async function handleTranslate(request, env) {
+export const handleTranslate = (request, env) => withCors(request, translateInner(request, env));
+async function translateInner(request, env) {
+  if (request.method === "OPTIONS") return preflight(request);
+  if (!checkOrigin(request)) return json({ error: "forbidden" }, 403);
   if (request.method !== "POST") return json({ error: "POST only" }, 405);
-  const url = new URL(request.url);
-  const origin = request.headers.get("origin");
-  if (origin && new URL(origin).host !== url.host) return json({ error: "forbidden" }, 403);
   if (!env || !env.AI) return json({ error: "AI binding is not configured" }, 503);
   const ip = request.headers.get("cf-connecting-ip") || "unknown";
   if (limited(ip)) return json({ error: "too many requests" }, 429);
@@ -96,5 +115,49 @@ Reply with JSON only, with exactly these keys: ${keys.map(k => `"${k}"`).join(",
     return json(res);
   } catch (e) {
     return json({ error: "translation failed" }, 502);
+  }
+}
+
+// 原稿の用語だけ、音声認識の聞き間違い候補を調べる — POST /subtitles/api/homophones
+// 入力：{ terms: [{ja, yomi}], context }  出力：{ items: [{ja, yomi, confusions, risky}] }
+export const handleHomophones = (request, env) => withCors(request, homophonesInner(request, env));
+async function homophonesInner(request, env) {
+  if (request.method === "OPTIONS") return preflight(request);
+  if (!checkOrigin(request)) return json({ error: "forbidden" }, 403);
+  if (request.method !== "POST") return json({ error: "POST only" }, 405);
+  if (!env || !env.AI) return json({ error: "AI binding is not configured" }, 503);
+  const ip = request.headers.get("cf-connecting-ip") || "unknown";
+  if (limited(ip)) return json({ error: "too many requests" }, 429);
+  let body;
+  try { body = await request.json(); } catch { return json({ error: "bad json" }, 400); }
+  const terms = (Array.isArray(body.terms) ? body.terms : []).slice(0, 30)
+    .map(t => ({ ja: clean(t.ja, 20), yomi: clean(t.yomi, 30) })).filter(t => t.ja);
+  if (!terms.length) return json({ items: [] });
+  const context = clean(body.context, 1500);
+  const system =
+`You support a live speech-recognition subtitle tool used for Japanese lectures and kōdan (Japanese storytelling).
+For each Japanese term from the speaker's manuscript, list what Japanese speech recognition might write INSTEAD when the speaker says that term:
+homophones and near-homophones written with other kanji, and the all-hiragana / all-katakana spelling if recognizers often output it.
+Rules:
+- "yomi": the reading in hiragana as used in this manuscript.
+- "confusions": at most 6 strings. Never include the term itself. Only include a spelling if, in a talk about this manuscript, seeing it would almost certainly mean a misrecognition of the term.
+- Do not include spellings that are ordinary everyday words the speaker might really say (e.g. for 機関 do not include 期間). If every plausible confusion is such an everyday word, return an empty list and set "risky": true.
+- Proper nouns (people, places, titles) usually have useful confusions with other kanji for the same reading.
+Reply with JSON only: {"items":[{"ja":"...","yomi":"...","confusions":["..."],"risky":false}]} — one item per input term, same order.`;
+  const user = (context ? `Manuscript excerpt (for context):\n${context}\n\n` : "") + "Terms:\n" + terms.map(t => "- " + t.ja + (t.yomi ? `（${t.yomi}）` : "")).join("\n");
+  try {
+    const out = await env.AI.run(LLM_MODEL, {
+      messages: [{ role: "system", content: system }, { role: "user", content: user }],
+      max_tokens: 2500, temperature: 0.1
+    });
+    const data = parseJsonLoose(llmText(out));
+    const items = (data && Array.isArray(data.items) ? data.items : []).map(it => ({
+      ja: clean(it.ja, 20), yomi: clean(it.yomi, 30),
+      confusions: (Array.isArray(it.confusions) ? it.confusions : []).map(c => clean(c, 20)).filter(c => c && c !== clean(it.ja, 20)).slice(0, 6),
+      risky: !!it.risky
+    })).filter(it => terms.some(t => t.ja === it.ja));
+    return json({ items });
+  } catch (e) {
+    return json({ error: "check failed" }, 502);
   }
 }
