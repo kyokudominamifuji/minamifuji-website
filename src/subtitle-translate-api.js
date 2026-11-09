@@ -2,8 +2,12 @@
 // Cloudflare Workers AI を使用（wrangler.jsonc の "ai" バインディング）。
 // 入力：{ text, src: "ja"|"en"|"zh", targets: ["en","zh"...], glossary: [{ja,en,zh}], context }
 // 出力：{ source, ja?, en?, zh?, model }
-// 標準のAI。Gemma 4 は答える前に長く「考える」ため40秒以上かかり、使えなかった（2026-11-09）。
-const LLM_MODEL = "@cf/meta/llama-4-scout-17b-16e-instruct";
+// 標準のAI（2026-11-09 に本番で比較して決定）
+// - 字幕の翻訳：Mistral Small 3.1（約1.5秒、聞き間違いの補正と繁体字が正確、日本語訳が自然、費用も安め）
+// - 聞き間違いチェック：Llama 3.3 70B（約5秒/10語。候補を多めに出す。Mistral は「公団」などを出さなかった）
+// - 不採用：Gemma 4（40秒以上・結果なし）、Llama 4 Scout（約7秒）、Qwen3（速いが聞き間違いを直さない）
+const LLM_MODEL = "@cf/mistralai/mistral-small-3.1-24b-instruct";
+const HOMOPHONE_MODEL = "@cf/meta/llama-3.3-70b-instruct-fp8-fast";
 // 速さ比べ用に指定できるAI（これ以外は指定できない）
 const LLM_CHOICES = [
   "@cf/meta/llama-4-scout-17b-16e-instruct",
@@ -12,7 +16,7 @@ const LLM_CHOICES = [
   "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
   "@cf/google/gemma-4-26b-a4b-it"
 ];
-const pickModel = m => LLM_CHOICES.includes(m) ? m : LLM_MODEL;
+const pickModel = (m, def = LLM_MODEL) => LLM_CHOICES.includes(m) ? m : def;
 async function runLLM(env, model, messages, max_tokens, timeoutMs = 12000) {
   const t = Date.now();
   // Qwen3 は /no_think で「考える」を止める
@@ -160,7 +164,7 @@ async function homophonesInner(request, env) {
     .map(t => ({ ja: clean(t.ja, 20), yomi: clean(t.yomi, 30) })).filter(t => t.ja);
   if (!terms.length) return json({ items: [] });
   const context = clean(body.context, 1500);
-  const model = pickModel(body.model), debug = !!body.debug;
+  const model = pickModel(body.model, HOMOPHONE_MODEL), debug = !!body.debug;
   const system =
 `You support a live speech-recognition subtitle tool used for Japanese lectures and kōdan (Japanese storytelling).
 For each Japanese term from the speaker's manuscript, list what Japanese speech recognition might write INSTEAD when the speaker says that term:
