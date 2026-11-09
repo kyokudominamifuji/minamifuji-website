@@ -2,7 +2,7 @@ import igaSubtitlesHtml from "./iga-subtitles.js";
 import classSubtitlesHtml from "./class-subtitles.js";
 import classSubtitlesMobileHtml from "./class-subtitles-mobile.js";
 import kodanSubtitlesHtml from "./kodan-subtitles.js";
-import { handleTranslate, handleHomophones } from "./subtitle-translate-api.js";
+import { handleTranslate, handleHomophones, handleScript } from "./subtitle-translate-api.js";
 import site from "./seo-worker.js";
 import gameHtml from "./tono-game.js";
 import paperGameHtml from "./tono-paper-game.js";
@@ -157,6 +157,7 @@ export default {
     // Classroom subtitles, phone edition + its translation API (Workers AI).
     if (path === "/subtitles/api/translate") return handleTranslate(request, env);
     if (path === "/subtitles/api/homophones") return handleHomophones(request, env);
+    if (path === "/subtitles/api/script") return handleScript(request, env);
     if (["/subtitles/m", "/subtitles/m/", "/subtitles/m/index.html"].includes(path)) {
       return new Response(classSubtitlesMobileHtml, { headers: {
         "content-type": "text/html; charset=utf-8",

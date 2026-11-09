@@ -193,3 +193,63 @@ Reply with JSON only: {"items":[{"ja":"...","yomi":"...","confusions":["..."],"r
     return json({ error: "check failed" }, 502);
   }
 }
+
+// 講談の台本ツール — POST /subtitles/api/script
+//  kind "lines"   : { lines:[ja…最大20], target:"en"|"zh", prev:[{ja,en}], synopsis, glossary } → { lines:[…] }
+//  kind "synopsis": { text, target } → { title, synopsis, characters:[{name, note}] }
+// 台本を読み込んだときに1回だけ使う（本番中は使わない）。
+const SCRIPT_MODEL = "@cf/meta/llama-3.3-70b-instruct-fp8-fast";
+const TARGET_NAME = { en: "natural English", zh: "Traditional Chinese as used in Taiwan (繁體中文)" };
+export const handleScript = (request, env) => withCors(request, scriptInner(request, env));
+async function scriptInner(request, env) {
+  if (request.method === "OPTIONS") return preflight(request);
+  if (!checkOrigin(request)) return json({ error: "forbidden" }, 403);
+  if (request.method !== "POST") return json({ error: "POST only" }, 405);
+  if (!env || !env.AI) return json({ error: "AI binding is not configured" }, 503);
+  const ip = request.headers.get("cf-connecting-ip") || "unknown";
+  if (limited(ip)) return json({ error: "too many requests" }, 429);
+  let body;
+  try { body = await request.json(); } catch { return json({ error: "bad json" }, 400); }
+  const target = body.target === "zh" ? "zh" : "en";
+  const model = pickModel(body.model, SCRIPT_MODEL);
+
+  if (body.kind === "synopsis") {
+    const text = clean(body.text, 9000);
+    if (!text) return json({ error: "empty" }, 400);
+    const system =
+`You prepare a short guide for international university students who will watch a live kōdan (Japanese traditional storytelling) performance with subtitles.
+From the script, write in ${TARGET_NAME[target]}:
+- "title": the story title
+- "synopsis": 4 to 6 short, simple sentences explaining the story so far and what happens (no spoilers of the very ending needed, but make the plot easy to follow)
+- "characters": up to 8 main characters, each {"name": romanized name (with Japanese in parentheses), "note": who they are in a few words}
+Reply with JSON only: {"title":"...","synopsis":"...","characters":[{"name":"...","note":"..."}]}`;
+    const r = await runLLM(env, model, [{ role: "system", content: system }, { role: "user", content: "Script:\n" + text }], 1200, 45000);
+    const d = parseJsonLoose(r.text);
+    if (!d || typeof d.synopsis !== "string") return json({ error: "failed", detail: r.error || "unparsable" }, 502);
+    return json({
+      title: clean(d.title, 120), synopsis: clean(d.synopsis, 1500),
+      characters: (Array.isArray(d.characters) ? d.characters : []).slice(0, 10).map(c => ({ name: clean(c && c.name, 80), note: clean(c && c.note, 160) })).filter(c => c.name)
+    });
+  }
+
+  // kind "lines"
+  const lines = (Array.isArray(body.lines) ? body.lines : []).slice(0, 20).map(l => clean(l, 200));
+  if (!lines.length || lines.every(l => !l)) return json({ error: "empty" }, 400);
+  const prev = (Array.isArray(body.prev) ? body.prev : []).slice(-4).map(p => ({ ja: clean(p && p.ja, 200), tr: clean(p && p.tr, 300) })).filter(p => p.ja);
+  const glossary = (Array.isArray(body.glossary) ? body.glossary : []).slice(0, 60)
+    .map(g => ({ ja: clean(g.ja, 40), t: clean(g[target], 60) })).filter(g => g.ja && g.t);
+  const synopsis = clean(body.synopsis, 800);
+  const system =
+`You translate a Japanese kōdan (traditional storytelling) script into ${TARGET_NAME[target]} subtitles for international university students watching live.
+- Translate each numbered line into exactly one subtitle line. Keep the same number of lines and the same order.
+- Make the story easy to follow: clear, natural, concise. Keep the storyteller's tone and the characters' voices in dialogue (keep quotation marks).
+- Romanize Japanese names (e.g. Tokugawa Ieyasu, Honda Heihachirō) and keep them consistent.${glossary.length ? "\n- Always use these translations:\n" + glossary.map(g => `  ${g.ja} = ${g.t}`).join("\n") : ""}${synopsis ? "\nStory summary for context: " + synopsis : ""}
+Reply with JSON only: {"lines":["...", "..."]} with exactly ${lines.length} strings.`;
+  const user = (prev.length ? "Previous lines (already translated, for context only):\n" + prev.map(p => `${p.ja} => ${p.tr}`).join("\n") + "\n\n" : "")
+    + "Lines to translate:\n" + lines.map((l, i) => `${i + 1}. ${l}`).join("\n");
+  const r = await runLLM(env, model, [{ role: "system", content: system }, { role: "user", content: user }], 2200, 50000);
+  const d = parseJsonLoose(r.text);
+  const out = d && Array.isArray(d.lines) ? d.lines.map(x => clean(x, 400)) : null;
+  if (!out || out.length !== lines.length) return json({ error: "count mismatch", got: out ? out.length : 0, detail: r.error || undefined }, 502);
+  return json({ lines: out });
+}
