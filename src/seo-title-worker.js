@@ -9,6 +9,8 @@ import paperGameHtml from "./tono-paper-game.js";
 import arigatoHtml from "./arigato-game.js";
 import miyakeHtml from "./miyake-game.js";
 import upgradeHomepage from "./homepage-upgrade.js";
+import refineHomepage from "./homepage-refine.js";
+import { renderSubtitlesAbout } from "./subtitles-about.js";
 
 function ensureAssociationLink(html, path) {
   if (!["/", "/en", "/en/"].includes(path)) return html;
@@ -144,6 +146,14 @@ export default {
         "x-robots-tag": "noindex, nofollow, noarchive"
       } });
     }
+    // 講談ライブ字幕の紹介ページ（想い・使い方）。ツール本体は /subtitles/kodan。
+    if (["/subtitles", "/subtitles/", "/en/subtitles", "/en/subtitles/"].includes(path)) {
+      return new Response(renderSubtitlesAbout(path.startsWith("/en/") ? "en" : "ja"), { headers: {
+        "content-type": "text/html; charset=utf-8",
+        "cache-control": "public, max-age=300",
+        "x-content-type-options": "nosniff"
+      } });
+    }
     // Kodan live subtitles with practice mode (script vs. recognized text).
     if (["/subtitles/kodan", "/subtitles/kodan/", "/subtitles/kodan/index.html"].includes(path)) {
       return new Response(kodanSubtitlesHtml, { headers: {
@@ -227,6 +237,7 @@ export default {
     html = upgradeHomepage(html, path);
     html = ensureAssociationLink(html, path);
     html = applyNovemberNotice(html, path);
+    html = refineHomepage(html, path);
 
     html = html.replace(
       /<h4 data-ja="鍵盤に命をかけた男たち" data-en="Men Who Gave Their Lives to the Keys">[\s\S]*?<\/h4>/,

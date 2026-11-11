@@ -23,6 +23,7 @@ seo-title-worker → seo-worker → profile-photo-worker → site-worker → cha
 - 書き換えは文字列置換（`.replace`）なので、**元の文言を変えると上の層の置換が効かなくなる**ことがある。
   文言を直すときは `grep` で同じ文言が他のWorkerにないか確認する
 - `homepage-upgrade.js` は seo-title-worker から呼ばれるトップページの最終仕上げ
+- `homepage-refine.js` はその後に呼ばれる2026-11の仕上げ（英語字幕講談セクション、挑戦→出演依頼の順番、演目2列、公演カードのチラシ右配置、フッター）
 - 未使用のファイル: `creative-title-worker.js` `finish-worker.js` `title-size-worker.js`（どこからも import されていない）
 - 将来、この重ね構成は1本に整理したい（未着手。始める前にオーナーに確認）
 
@@ -39,6 +40,7 @@ seo-title-worker → seo-worker → profile-photo-worker → site-worker → cha
 | `/games/miyake` | miyake-game.js | 三宅組専用。**非公開のまま** |
 | `/subtitles/iga` | iga-subtitles.js | 講談ライブ字幕スタジオ（本人用）。**非公開のまま** |
 | `/subtitles/class` `/subtitles/m` | class-subtitles*.js | 授業ライブ字幕（PC版・スマホ版） |
+| `/subtitles` `/en/subtitles` | subtitles-about.js | 講談ライブ字幕の紹介ページ（想い・使い方・注意）。公開・検索対象 |
 | `/subtitles/kodan` | kodan-subtitles.js | 講談ライブ字幕（練習モードつき）。①台本→②練習（台本と字幕を比べてまちがいを自動で見つける）→③本番 |
 | `/subtitles/api/translate` | subtitle-translate-api.js | Workers AI で翻訳。**利用回数に応じて費用がかかる** |
 | `/subtitles/api/homophones` | subtitle-translate-api.js | 原稿の用語だけ、音声認識の聞き間違い候補を Workers AI で調べる（原稿読込時のみ） |
