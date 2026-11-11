@@ -167,6 +167,8 @@ export default {
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url><loc>${ORIGIN}/</loc><lastmod>2026-09-11</lastmod><xhtml:link rel="alternate" hreflang="ja" href="${ORIGIN}/" /><xhtml:link rel="alternate" hreflang="en" href="${ORIGIN}/en/" /></url>
   <url><loc>${ORIGIN}/en/</loc><lastmod>2026-09-11</lastmod><xhtml:link rel="alternate" hreflang="ja" href="${ORIGIN}/" /><xhtml:link rel="alternate" hreflang="en" href="${ORIGIN}/en/" /></url>
+  <url><loc>${ORIGIN}/subtitles</loc><lastmod>2026-11-11</lastmod><xhtml:link rel="alternate" hreflang="ja" href="${ORIGIN}/subtitles" /><xhtml:link rel="alternate" hreflang="en" href="${ORIGIN}/en/subtitles" /></url>
+  <url><loc>${ORIGIN}/en/subtitles</loc><lastmod>2026-11-11</lastmod><xhtml:link rel="alternate" hreflang="ja" href="${ORIGIN}/subtitles" /><xhtml:link rel="alternate" hreflang="en" href="${ORIGIN}/en/subtitles" /></url>
 </urlset>`;
       return new Response(xml, { headers: { "content-type": "application/xml; charset=UTF-8", "cache-control": "public, max-age=3600" } });
     }
