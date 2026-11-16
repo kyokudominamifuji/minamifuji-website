@@ -121,7 +121,7 @@ export function inviteSectionMarkup() {
     <div class="wrap">
       <div class="eyebrow">INVITE</div>
       <h2 data-ja="こんな場にお呼びください" data-en="Invite Minamifuji">こんな場にお呼びください</h2>
-      <p class="mf-invite-lead" data-ja="お笑いの舞台、教壇、そして起業経験。さまざまな現場を経てきた講談師だから、初めての方にも届く一席をお届けします。" data-en="Shaped by the comedy stage, the classroom and his experience as an entrepreneur, Minamifuji delivers kōdan that reaches first-time audiences.">お笑いの舞台、教壇、そして起業経験。さまざまな現場を経てきた講談師だから、初めての方にも届く一席をお届けします。</p>
+      <p class="mf-invite-lead" data-ja="お笑いの舞台、教壇、そして自ら起業したビジネスの現場。さまざまな経験を重ねてきた講談師だから、初めての方にも届く一席をお届けします。" data-en="Shaped by the comedy stage, the classroom and his experience as an entrepreneur, Minamifuji delivers kōdan that reaches first-time audiences.">お笑いの舞台、教壇、そして自ら起業したビジネスの現場。さまざまな経験を重ねてきた講談師だから、初めての方にも届く一席をお届けします。</p>
       <ul class="mf-invite-list">
         ${items}
       </ul>
