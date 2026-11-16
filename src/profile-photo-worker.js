@@ -8,7 +8,7 @@ export default {
 
     let html = await response.text();
     const profilePhotoStyle = `<style id="profile-photo-v2">
-      /* TOP画像はそのまま。プロフィール写真は senzai pic.jpg を全体表示 */
+      /* TOP画像はそのまま。プロフィール写真は宣材写真（minamifuji-senzai.jpg）を全体表示 */
       .profile .portrait {
         background-image:url("/images/profile/minamifuji-senzai.jpg")!important;
         background-position:center center!important;

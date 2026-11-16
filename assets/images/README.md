@@ -35,6 +35,3 @@
 - `flyers/2026-11-21-fuji-to-ao-kodanseki.jpeg` — 第10回・第11回 富士と碧講談席
 - `flyers/2026-12-05-gannoji-kodankai.jpeg` — 第41回 願王寺講談会
 - `flyers/2027-01-09-nagoya-kodankai.jpeg` — 新春 第53回 名古屋講談会
-
-※ ルート直下の元画像（`9DE0…png` `IMG_0843.jpeg` など）は、サイトからは参照しなくなりました。
-外部（SNS投稿など）から直接リンクしていなければ削除して構いません。

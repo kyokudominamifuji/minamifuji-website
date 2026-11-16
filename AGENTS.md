@@ -23,7 +23,6 @@ seo-title-worker → seo-worker → profile-photo-worker → site-worker → cha
 - 書き換えは文字列置換（`.replace`）なので、**元の文言を変えると上の層の置換が効かなくなる**ことがある。
   文言を直すときは `grep` で同じ文言が他のWorkerにないか確認する
 - `homepage-upgrade.js` は seo-title-worker から呼ばれるトップページの最終仕上げ
-- 未使用のファイル: `creative-title-worker.js` `finish-worker.js` `title-size-worker.js`（どこからも import されていない。削除はオーナー確認後）
 - 将来、この重ね構成は1本に整理したい（未着手。始める前にオーナーに確認）
 
 ## ページ一覧
