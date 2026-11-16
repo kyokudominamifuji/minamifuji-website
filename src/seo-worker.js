@@ -40,6 +40,10 @@ function seoHead(lang) {
         "alternateName": "Kyokudo Minamifuji",
         "url": `${ORIGIN}/`,
         "jobTitle": "講談師 / Japanese Kodan Storyteller",
+        "sameAs": [
+          "https://www.kamigata-kodan.jp/index.php/member/minamihuji",
+          "https://www.instagram.com/373.fuji/"
+        ],
         "description": "静岡県富士市出身の講談師。日本各地で高座に立ち、歴史と物語を今を生きる人へ届ける。",
         "birthPlace": {
           "@type": "Place",
