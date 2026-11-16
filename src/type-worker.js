@@ -130,7 +130,11 @@ export default {
 
     // プロフィール見出し下のひとこと（下の層 worker.js / brand-worker.js の文言の行き来に関係なく、ここで確定させる）
     html = html.replace(/(<div class="eyebrow">THE STORYTELLER<\/div>[\s\S]*?<\/div>\s*)<p [^>]*>[\s\S]*?<\/p>/,
-      '$1<p data-ja="お笑い、落語の修業、教壇、起業。回り道のすべてを語りに変える講談師。" data-en="From comedy to kōdan — a storyteller who turns every detour into his craft.">お笑い、落語の修業、教壇、起業。回り道のすべてを語りに変える講談師。</p>');
+      '$1<div class="mf-profile-lead">' +
+        '<p class="mf-lead-1" data-ja="17歳、漫才師として初舞台。" data-en="At 17, a stage debut as a manzai comedian.">17歳、漫才師として初舞台。</p>' +
+        '<p data-ja="笑いを追い、教壇に立ち、自ら事業を興す。そして、講談の高座へ。" data-en="Chasing laughter, standing at the lectern, building his own business — and then, to the kōdan stage.">笑いを追い、教壇に立ち、自ら事業を興す。そして、講談の高座へ。</p>' +
+        '<p class="mf-lead-3" data-ja="遠回りこそが、この芸の原点。" data-en="The long way around is where this art begins.">遠回りこそが、この芸の原点。</p>' +
+        '</div>');
 
     const typeStyle = `<style id="hero-title-size-fix">
       html:lang(ja) .hero-kicker {
@@ -179,6 +183,9 @@ export default {
       .instagram-brand .instagram-handle {
         margin-bottom: 0 !important;
       }
+      .profile .mf-profile-lead p{margin:0 0 6px;line-height:1.9}
+      .profile .mf-profile-lead .mf-lead-1{font-family:"Yu Mincho","Hiragino Mincho ProN",serif;font-size:1.25em;color:var(--ink);margin-bottom:10px}
+      .profile .mf-profile-lead .mf-lead-3{font-weight:700;color:#a13d28;margin-top:10px}
       .profile-copy .profile-signature {
         margin-top: 36px;
         padding-top: 24px;
