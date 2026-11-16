@@ -189,6 +189,10 @@ function pastEventsMarkup(past, thisYear) {
         <p data-ja="主催公演のほか、上方講談協会の講談会などに出演しています。2026年9月の公式サイト開設以降の公演を掲載しています。" data-en="Besides his own shows, Minamifuji appears regularly at Kamigata Kōdan Association performances. Listed here are performances since this website launched in September 2026.">主催公演のほか、上方講談協会の講談会などに出演しています。2026年9月の公式サイト開設以降の公演を掲載しています。</p>
       </div>
       ${groups}
+      <div class="mf-archive-links">
+        <a href="https://www.kamigata-kodan.jp/index.php/schedule" target="_blank" rel="noopener noreferrer" data-ja="上方講談協会の公演スケジュール ↗" data-en="Kamigata Kōdan Association schedule ↗">上方講談協会の公演スケジュール ↗</a>
+        <a href="https://www.kamigata-kodan.jp/index.php/member/minamihuji" target="_blank" rel="noopener noreferrer" data-ja="協会サイトの旭堂南不二紹介ページ ↗" data-en="Minamifuji on the Association website ↗">協会サイトの旭堂南不二紹介ページ ↗</a>
+      </div>
     </div>`;
 }
 
@@ -473,6 +477,9 @@ export default {
   .mf-archive-piece{color:#695c4d}
   .mf-archive-link{font-size:.78rem;font-weight:700;color:#a13d28;white-space:nowrap;text-decoration:none}
   .mf-archive-link:hover,.mf-archive-link:focus-visible{text-decoration:underline}
+  .mf-archive-links{display:flex;flex-wrap:wrap;gap:10px 26px;margin-top:20px}
+  .mf-archive-links a{font-size:.84rem;font-weight:700;color:#a13d28;text-decoration:underline;text-decoration-color:rgba(161,61,40,.35);text-underline-offset:4px}
+  .mf-archive-links a:hover,.mf-archive-links a:focus-visible{text-decoration-color:#a13d28}
   @media (max-width:600px){
     .mf-archive-item{grid-template-columns:62px minmax(0,1fr);}
     .mf-archive-link{grid-column:2}
