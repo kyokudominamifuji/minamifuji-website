@@ -115,9 +115,9 @@
     "price_en": "Visitor ¥1,000 / Guest Free",
     "capacity_ja": "",
     "capacity_en": "",
-    "reservation_url": "mailto:373fuji@gmail.com?subject=%E5%AF%8C%E5%A3%AB%E3%81%A8%E7%A2%A7%E8%AC%9B%E8%AB%87%E5%B8%AD%20%E7%AC%AC10%E5%9B%9E%20%E4%BA%88%E7%B4%84",
-    "reservation_label_ja": "メールでお申し込み ↗",
-    "reservation_label_en": "Book by email ↗",
+    "reservation_url": "https://docs.google.com/forms/d/e/1FAIpQLScUX-kmzKggzcnHqMr2RxNWF2-DhUCepGPB9UY8r4SNIBUhFg/viewform",
+    "reservation_label_ja": "申し込みフォームへ ↗",
+    "reservation_label_en": "Book via online form ↗",
     "flyer_url": "/images/flyers/2026-11-21-fuji-to-ao-kodanseki.jpeg"
   },
   {
@@ -188,9 +188,9 @@
     "price_en": "Visitor ¥1,000 / Guest Free",
     "capacity_ja": "",
     "capacity_en": "",
-    "reservation_url": "mailto:373fuji@gmail.com?subject=%E5%AF%8C%E5%A3%AB%E3%81%A8%E7%A2%A7%E8%AC%9B%E8%AB%87%E5%B8%AD%20%E7%AC%AC11%E5%9B%9E%20%E4%BA%88%E7%B4%84",
-    "reservation_label_ja": "メールでお申し込み ↗",
-    "reservation_label_en": "Book by email ↗",
+    "reservation_url": "https://docs.google.com/forms/d/e/1FAIpQLScUX-kmzKggzcnHqMr2RxNWF2-DhUCepGPB9UY8r4SNIBUhFg/viewform",
+    "reservation_label_ja": "申し込みフォームへ ↗",
+    "reservation_label_en": "Book via online form ↗",
     "flyer_url": "/images/flyers/2026-11-21-fuji-to-ao-kodanseki.jpeg"
   }
 ]
