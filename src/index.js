@@ -174,7 +174,7 @@ export default {
     <div class="wrap">
       <div class="section-head">
         <div><div class="eyebrow">ON STAGE</div><h2 data-ja="出演情報" data-en="Schedule">出演情報</h2></div>
-        <p data-ja="現在の主催公演を中心に掲載しています。" data-en="Upcoming featured performances are listed here.">現在の主催公演を中心に掲載しています。</p>
+        <p data-ja="これからの出演予定です。終わった公演は「これまでの公演」にまとめています。" data-en="Upcoming performances. Past shows are listed under “Past Performances.”">これからの出演予定です。終わった公演は「これまでの公演」にまとめています。</p>
       </div>
       <article class="event">
         <div class="date"><div class="year">2026</div><div class="day">11.01</div><div class="dow">SUNDAY</div></div>

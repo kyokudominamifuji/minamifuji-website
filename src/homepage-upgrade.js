@@ -156,13 +156,13 @@ header{background:rgba(19,18,16,.95)!important;backdrop-filter:blur(12px);-webki
 #stage .event:not([data-next-event="true"]) .event-actions .reserve:hover{background:#f4ede2}
 #stage .event[data-next-event="true"] .event-actions .reserve{display:inline-flex;align-items:center;justify-content:center;background:#9f2d26!important;border:1px solid #9f2d26!important;color:#fff!important;padding:9px 17px;text-decoration:none!important}
 #stage .event[data-next-event="true"] .event-actions .reserve:hover{background:#83231c!important}
-#stage .event[data-event-id="2026-11-01-minamifuji-sakurako"] .facts{grid-template-columns:1fr!important}
+#stage .event[data-featured="true"] .facts{grid-template-columns:1fr!important}
 .mf-dock{display:none}
 @media(max-width:1080px){
   #stage .event{grid-template-columns:105px minmax(0,1fr);gap:20px;padding:24px}
   #stage .event[data-next-event="true"]{padding-top:21px}
-  #stage .event[data-event-id="2026-11-01-minamifuji-sakurako"]>div:nth-child(2){grid-template-columns:1fr!important}
-  #stage .event[data-event-id="2026-11-01-minamifuji-sakurako"] .event-flyer-link{grid-column:1!important;grid-row:auto!important;max-width:350px;width:100%;margin:14px 0 18px}
+  #stage .event[data-featured="true"]>div:nth-child(2){grid-template-columns:1fr!important}
+  #stage .event[data-featured="true"] .event-flyer-link{grid-column:1!important;grid-row:auto!important;max-width:350px;width:100%;margin:14px 0 18px}
 }
 @media(max-width:850px){
   html{scroll-padding-top:74px}
