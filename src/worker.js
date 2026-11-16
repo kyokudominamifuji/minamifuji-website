@@ -186,7 +186,7 @@ function pastEventsMarkup(past, thisYear) {
       <div class="mf-archive-head">
         <div class="eyebrow">ARCHIVE</div>
         <h3 data-ja="これまでの公演" data-en="Past Performances">これまでの公演</h3>
-        <p data-ja="主催公演のほか、上方講談協会の講談会などに出演しています。" data-en="Besides his own shows, Minamifuji appears regularly at Kamigata Kōdan Association performances.">主催公演のほか、上方講談協会の講談会などに出演しています。</p>
+        <p data-ja="主催公演のほか、上方講談協会の講談会などに出演しています。2026年9月の公式サイト開設以降の公演を掲載しています。" data-en="Besides his own shows, Minamifuji appears regularly at Kamigata Kōdan Association performances. Listed here are performances since this website launched in September 2026.">主催公演のほか、上方講談協会の講談会などに出演しています。2026年9月の公式サイト開設以降の公演を掲載しています。</p>
       </div>
       ${groups}
     </div>`;
