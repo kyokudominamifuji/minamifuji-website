@@ -106,6 +106,30 @@ export function mediaSectionMarkup() {
   </section>`;
 }
 
+// 出演・講演のご依頼先の例（「こんな場にお呼びください」）
+const INVITE = [
+  ["学校・大学", "Schools & universities", "講談の授業・ワークショップ。英語字幕付きなら留学生や国際交流の場にも。", "Kōdan classes and workshops — with English subtitles for international students and exchange events."],
+  ["企業・団体", "Companies & organizations", "「物語で伝える」話し方の研修、記念行事や懇親会での一席。", "Storytelling and speaking workshops, or a performance for anniversaries and gatherings."],
+  ["自治体・観光・博物館", "Local government, tourism & museums", "地域の歴史や人物を題材にした創作講談。オーダーメイドもご相談ください。", "Original kōdan based on local history and people — custom pieces available."],
+  ["インバウンド・国際交流", "Inbound tourism & international exchange", "英語字幕付きで、日本語がわからなくても楽しめる講談体験。", "An English-subtitled kōdan experience anyone can enjoy, no Japanese required."],
+  ["地域のイベント・お祭り", "Community events & festivals", "三味線・音楽・マジックなど、ほかの芸との共演企画も。", "Collaborations with shamisen, music, magic and other performing arts."]
+];
+
+export function inviteSectionMarkup() {
+  const items = INVITE.map(([tja, ten, dja, den]) => `<li><b data-ja="${esc(tja)}" data-en="${esc(ten)}">${esc(tja)}</b><p data-ja="${esc(dja)}" data-en="${esc(den)}">${esc(dja)}</p></li>`).join("\n        ");
+  return `<section class="mf-invite" id="invite">
+    <div class="wrap">
+      <div class="eyebrow">INVITE</div>
+      <h2 data-ja="こんな場にお呼びください" data-en="Invite Minamifuji">こんな場にお呼びください</h2>
+      <p class="mf-invite-lead" data-ja="お笑いの舞台、教壇、商売の現場を経てきた講談師だから、初めての方にも届く一席をお届けします。" data-en="Shaped by the comedy stage, the classroom and the business world, Minamifuji delivers kōdan that reaches first-time audiences.">お笑いの舞台、教壇、商売の現場を経てきた講談師だから、初めての方にも届く一席をお届けします。</p>
+      <ul class="mf-invite-list">
+        ${items}
+      </ul>
+      <a class="mf-invite-cta" href="#contact" data-ja="出演・講演のご相談はこちら →" data-en="Contact for bookings →">出演・講演のご相談はこちら →</a>
+    </div>
+  </section>`;
+}
+
 function noUpcomingEventMarkup(unavailable = false) {
   const ja = unavailable
     ? "公演予定を一時的に取得できません。時間をおいて再度ご覧いただくか、Instagramで最新のお知らせをご確認ください。"
@@ -442,6 +466,16 @@ export default {
     .event[data-featured="true"] {padding: 24px 18px;}
     .event[data-featured="true"] .event-actions {flex-direction: column;align-items:stretch;}
   }
+
+  /* こんな場にお呼びください */
+  .mf-invite{padding:72px 0;background:#fffdf8;border-top:1px solid rgba(44,34,23,.12)}
+  .mf-invite h2{font-family:"Yu Mincho","Hiragino Mincho ProN",serif;font-weight:500;font-size:clamp(1.8rem,3.4vw,2.6rem);margin:8px 0 12px}
+  .mf-invite-lead{margin:0 0 26px;color:var(--muted);font-size:.92rem;line-height:1.9;max-width:680px}
+  .mf-invite-list{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+  .mf-invite-list li{padding:20px 20px 18px;border:1px solid rgba(44,34,23,.17);border-top:3px solid #a13d28;background:#fff}
+  .mf-invite-list b{display:block;font-size:1rem;margin-bottom:6px}
+  .mf-invite-list p{margin:0;color:#5f5447;font-size:.86rem;line-height:1.8}
+  .mf-invite-cta{display:inline-block;margin-top:24px;font-weight:800;color:#a13d28;text-decoration:underline;text-underline-offset:5px}
 
   /* メディア掲載 */
   .mf-media{padding:64px 0;background:#f7f3ec;border-top:1px solid rgba(44,34,23,.12)}

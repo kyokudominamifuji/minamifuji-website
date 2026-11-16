@@ -1,4 +1,4 @@
-import { mediaSectionMarkup } from "./worker.js";
+import { mediaSectionMarkup, inviteSectionMarkup } from "./worker.js";
 /* Visual-only homepage uplift; event data and ticket links remain unchanged. */
 
 function threePillarEnhancements(html, path) {
@@ -78,6 +78,7 @@ export default function upgradeHomepage(html,path) {
   if (!["/","/en","/en/"].includes(path) || html.includes("mf-homepage-upgrade-v2")) return html;
   // メディア掲載（worker.js の MEDIA）。下の層の置換に巻き込まれないよう、最後のこの層で差し込む
   if (!html.includes('id="media"')) html = html.replace('<section class="contact" id="contact">', () => mediaSectionMarkup() + '\n  <section class="contact" id="contact">');
+  if (!html.includes('id="invite"')) html = html.replace('<section class="contact" id="contact">', () => inviteSectionMarkup() + '\n  <section class="contact" id="contact">');
   const en = path !== "/";
   // The same original photo as the desktop background, rendered at its natural
   // aspect ratio on phones so the head is never cropped by background-cover.
