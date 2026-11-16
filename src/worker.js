@@ -80,7 +80,8 @@ const MEDIA = [
     title: "【富士市】英語字幕付き講談! 富士市出身の講談師・旭堂南不二さんが挑む新境地 ‘Kodan’",
     summary_ja: "英語字幕付きの講談への挑戦と、富士駅前のゲストハウス「富士と碧」での講談会が、日英併記で紹介されました。",
     summary_en: "A bilingual feature on Minamifuji's English-subtitled Kōdan and his performances at Guesthouse Fuji to Ao near Fuji Station.",
-    url: "https://news.yahoo.co.jp/expert/articles/f3ea2ac3d38e141858d2edfa1532231c8d5db4f4"
+    // 記事は配信終了（2026-11 確認）。リンク切れのため url は付けない
+    ended: true
   }
 ];
 
@@ -88,7 +89,10 @@ export function mediaSectionMarkup() {
   if (!MEDIA.length) return "";
   const items = MEDIA.map(m => `<li class="mf-media-item">
           <div class="mf-media-meta"><span>${esc(m.date)}</span><span data-ja="${esc(m.outlet_ja)}" data-en="${esc(m.outlet_en || m.outlet_ja)}">${esc(m.outlet_ja)}</span></div>
-          <a class="mf-media-title" href="${esc(m.url)}" target="_blank" rel="noopener noreferrer">${esc(m.title)} ↗</a>
+          ${m.url
+            ? `<a class="mf-media-title" href="${esc(m.url)}" target="_blank" rel="noopener noreferrer">${esc(m.title)} ↗</a>`
+            : `<span class="mf-media-title is-static">${esc(m.title)}</span>`}
+          ${m.ended ? `<small class="mf-media-note" data-ja="※記事の配信は終了しています" data-en="This article is no longer available online.">※記事の配信は終了しています</small>` : ""}
           <p data-ja="${esc(m.summary_ja)}" data-en="${esc(m.summary_en || m.summary_ja)}">${esc(m.summary_ja)}</p>
         </li>`).join("\n        ");
   return `<section class="mf-media" id="media">
@@ -443,6 +447,8 @@ export default {
   .mf-media-meta{display:flex;gap:14px;font-size:.74rem;letter-spacing:.06em;color:#9a6c43;margin-bottom:6px}
   .mf-media-title{display:inline-block;font-weight:700;font-size:1rem;line-height:1.6;color:inherit;text-decoration:underline;text-decoration-color:rgba(161,61,40,.4);text-underline-offset:4px;overflow-wrap:anywhere}
   .mf-media-title:hover,.mf-media-title:focus-visible{color:#a13d28}
+  .mf-media-title.is-static{text-decoration:none}
+  .mf-media-note{display:block;margin-top:4px;font-size:.72rem;color:#9a8d7d}
   .mf-media-item p{margin:6px 0 0;color:var(--muted);font-size:.86rem;line-height:1.8}
 
   /* これまでの公演 */
