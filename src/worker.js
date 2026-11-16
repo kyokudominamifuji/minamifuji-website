@@ -70,6 +70,38 @@ function renderEvent(e) {
       </article>`;
 }
 
+
+// メディア掲載。新しいものを上に追加する。記事の全文は載せず、見出し・ひとこと紹介・リンクだけ。
+const MEDIA = [
+  {
+    date: "2025.08",
+    outlet_ja: "Yahoo!ニュース エキスパート",
+    outlet_en: "Yahoo! News Japan (Expert)",
+    title: "【富士市】英語字幕付き講談! 富士市出身の講談師・旭堂南不二さんが挑む新境地 ‘Kodan’",
+    summary_ja: "英語字幕付きの講談への挑戦と、富士駅前のゲストハウス「富士と碧」での講談会が、日英併記で紹介されました。",
+    summary_en: "A bilingual feature on Minamifuji's English-subtitled Kōdan and his performances at Guesthouse Fuji to Ao near Fuji Station.",
+    url: "https://news.yahoo.co.jp/expert/articles/f3ea2ac3d38e141858d2edfa1532231c8d5db4f4"
+  }
+];
+
+export function mediaSectionMarkup() {
+  if (!MEDIA.length) return "";
+  const items = MEDIA.map(m => `<li class="mf-media-item">
+          <div class="mf-media-meta"><span>${esc(m.date)}</span><span data-ja="${esc(m.outlet_ja)}" data-en="${esc(m.outlet_en || m.outlet_ja)}">${esc(m.outlet_ja)}</span></div>
+          <a class="mf-media-title" href="${esc(m.url)}" target="_blank" rel="noopener noreferrer">${esc(m.title)} ↗</a>
+          <p data-ja="${esc(m.summary_ja)}" data-en="${esc(m.summary_en || m.summary_ja)}">${esc(m.summary_ja)}</p>
+        </li>`).join("\n        ");
+  return `<section class="mf-media" id="media">
+    <div class="wrap">
+      <div class="eyebrow">MEDIA</div>
+      <h2 data-ja="メディア掲載" data-en="In the Media">メディア掲載</h2>
+      <ul class="mf-media-list">
+        ${items}
+      </ul>
+    </div>
+  </section>`;
+}
+
 function noUpcomingEventMarkup(unavailable = false) {
   const ja = unavailable
     ? "公演予定を一時的に取得できません。時間をおいて再度ご覧いただくか、Instagramで最新のお知らせをご確認ください。"
@@ -402,6 +434,16 @@ export default {
     .event[data-featured="true"] {padding: 24px 18px;}
     .event[data-featured="true"] .event-actions {flex-direction: column;align-items:stretch;}
   }
+
+  /* メディア掲載 */
+  .mf-media{padding:64px 0;background:#f7f3ec;border-top:1px solid rgba(44,34,23,.12)}
+  .mf-media h2{font-family:"Yu Mincho","Hiragino Mincho ProN",serif;font-weight:500;font-size:clamp(1.8rem,3.4vw,2.6rem);margin:8px 0 22px}
+  .mf-media-list{list-style:none;margin:0;padding:0;border-top:1px solid rgba(44,34,23,.17)}
+  .mf-media-item{padding:18px 2px;border-bottom:1px solid rgba(44,34,23,.17)}
+  .mf-media-meta{display:flex;gap:14px;font-size:.74rem;letter-spacing:.06em;color:#9a6c43;margin-bottom:6px}
+  .mf-media-title{display:inline-block;font-weight:700;font-size:1rem;line-height:1.6;color:inherit;text-decoration:underline;text-decoration-color:rgba(161,61,40,.4);text-underline-offset:4px;overflow-wrap:anywhere}
+  .mf-media-title:hover,.mf-media-title:focus-visible{color:#a13d28}
+  .mf-media-item p{margin:6px 0 0;color:var(--muted);font-size:.86rem;line-height:1.8}
 
   /* これまでの公演 */
   .mf-archive{margin-top:56px;padding-top:34px;border-top:1px solid rgba(44,34,23,.25)}
