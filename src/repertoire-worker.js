@@ -143,7 +143,7 @@ export default {
 
           <article class="original-card">
             <span class="original-no">04</span>
-            <h4 data-ja="賢者たちの贈り物" data-en="The Gifts of the Wise">賢者たちの贈り物</h4>
+            <h4 data-ja="賢者の贈り物" data-en="The Gift of the Magi">賢者の贈り物</h4>
             <p data-ja="O・ヘンリーの名作『賢者の贈り物』をもとに、舞台を江戸時代へ。講談ならではの語りと世界観でよみがえらせた創作講談です。" data-en="Inspired by O. Henry's classic The Gift of the Magi, reimagined in the Edo period and reborn through the rhythm and world of Kōdan.">O・ヘンリーの名作『賢者の贈り物』をもとに、舞台を江戸時代へ。講談ならではの語りと世界観でよみがえらせた創作講談です。</p>
           </article>
 
