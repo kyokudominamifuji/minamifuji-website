@@ -23,7 +23,7 @@ seo-title-worker → seo-worker → profile-photo-worker → site-worker → cha
 - 書き換えは文字列置換（`.replace`）なので、**元の文言を変えると上の層の置換が効かなくなる**ことがある。
   文言を直すときは `grep` で同じ文言が他のWorkerにないか確認する
 - `homepage-upgrade.js` は seo-title-worker から呼ばれるトップページの最終仕上げ
-- 未使用のファイル: `creative-title-worker.js` `finish-worker.js` `title-size-worker.js`（どこからも import されていない）
+- 未使用のファイル: `creative-title-worker.js` `finish-worker.js` `title-size-worker.js`（どこからも import されていない。削除はオーナー確認後）
 - 将来、この重ね構成は1本に整理したい（未着手。始める前にオーナーに確認）
 
 ## ページ一覧
@@ -54,6 +54,10 @@ seo-title-worker → seo-worker → profile-photo-worker → site-worker → cha
 - `src/events.json` を編集する。worker.js が **GitHub の main から実行時に読み込む**（1分キャッシュ）ので、
   main にマージすれば反映される
 - チラシ画像は `assets/images/flyers/YYYY-MM-DD-公演名.jpeg` に置き、`flyer_url` は `/images/flyers/...` と書く
+- 終わった公演は自動で「これまでの公演」（`#archive`、年ごと・新しい順）に移る。載せたくない公演は `"archive": false`
+- これからの公演は Google 検索向けの公演データ（schema.org Event）を自動で出す。日時は `time_ja` の「○○:○○開演」、料金は `price_ja` の最初の「○円」から読む
+- 任意の項目: `detail_url`（詳細ページへのリンク）、`featured: true`（目立つ枠で表示）
+- 特定の公演IDをコードに直接書かない。必要な違いは events.json の項目で表す
 
 ## 画像
 

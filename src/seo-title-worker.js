@@ -31,9 +31,8 @@ function ensureAssociationLink(html, path) {
 
 
 function applyNovemberNotice(html, path) {
-  const home = ["/", "/en", "/en/"].includes(path);
   const detail = ["/events/2026-11-01", "/events/2026-11-01/"].includes(path);
-  if (!home && !detail) return html;
+  if (!detail) return html;
   const en = path.startsWith("/en");
   const title = "旭堂南不二とオレンジマジシャンニシオの特別公演";
   const notice = '<aside class="mf-change-notice" aria-label="公演内容変更のお知らせ">' +
@@ -42,20 +41,7 @@ function applyNovemberNotice(html, path) {
     '<p>' + (en ? 'Existing bookings remain valid; no action is needed to attend. For a free cancellation, email ' : 'ご予約はそのまま有効です（再申し込み不要）。キャンセルは無料です。ご希望の方は ') +
     '<a href="mailto:373fuji@gmail.com">373fuji@gmail.com</a>' +
     (en ? '. A new date for the duo performance will be announced when decided.' : ' へご連絡ください。二人会の新日程は、決まり次第お知らせします。') + '</p></aside>';
-  if (home) {
-    html = html.replaceAll("旭堂南不二・佐藤さくら子 二人会", title)
-      .replaceAll("Kyokudo Minamifuji &amp; Sakurako Sato", "Kyokudo Minamifuji &amp; Orange Magician Nishio")
-      .replaceAll("Kyokudo Minamifuji & Sakurako Sato", "Kyokudo Minamifuji & Orange Magician Nishio")
-      .replaceAll("講談 × 三味線 ／ 静岡・富士", "講談 × マジック ／ 静岡・富士")
-      .replaceAll("KŌDAN × SHAMISEN / FUJI, SHIZUOKA", "KŌDAN × MAGIC / FUJI, SHIZUOKA")
-      .replaceAll("声と糸が、物語を紡ぐ。", "講談と本格ステージマジックをお届けします。")
-      .replaceAll("Voice and strings weave a story.", "Enjoy Kōdan and a full stage magic show.");
-    html = html.replace(/<article class="event"[^>]*data-event-id="2026-11-01-minamifuji-sakurako"[\s\S]*?<\/article>/, card =>
-      card.replace(/<a class="event-flyer-link"[\s\S]*?<\/a>/g, "")
-        .replace('<div class="event-actions">', notice + '<div class="event-actions">')
-        .replaceAll("公演詳細・チラシを見る", "公演詳細を見る")
-        .replaceAll("第一回二人会の公演詳細とチラシを見る", "11月1日特別公演の詳細を見る"));
-  }
+  // トップページの11/1カードは、公演データ（events.json）側を変更後の内容にしたので書き換え不要。
   if (detail) {
     html = html.replace(/<h1 class="fk-title"[\s\S]*?<\/h1>/, '<h1 class="fk-title" id="fk-event-heading">旭堂南不二<br><span class="mf-magic-name">オレンジマジシャンニシオ</span><small>特 別 公 演</small></h1>')
       .replaceAll("第一回 旭堂南不二・佐藤さくら子 二人会", title)
