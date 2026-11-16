@@ -7,14 +7,15 @@ function threePillarEnhancements(html, path) {
 
   // An evergreen navigation item must never be coupled to a single show's booking form.
   // Per-event booking links still live exclusively in the upcoming performance cards.
-  const fanTarget = html.includes('id="instagram"') ? "#instagram" : "#about";
+  // 「活動を見る」は南不二の挑戦（音楽・三味線・世界へ）の欄へ
+  const fanTarget = html.includes('id="challenge"') ? "#challenge" : "#about";
   const threeCards = en ? [
     {no:"01", eyebrow:"WATCH", title:"Experience a live performance", copy:"See upcoming dates, venues, and how to book. Your first Kōdan is welcome.", url:"#stage", label:"View performances"},
-    {no:"02", eyebrow:"INVITE", title:"Bring Kōdan to your venue", copy:"For cultural events, schools, organizations, workshops, and collaborations.", url:"#contact", label:"Performance inquiries"},
+    {no:"02", eyebrow:"INVITE", title:"Bring Kōdan to your venue", copy:"For cultural events, schools, organizations, workshops, and collaborations.", url:"#invite", label:"Performance inquiries"},
     {no:"03", eyebrow:"FOLLOW", title:"Stay close to the story", copy:"Discover Minamifuji's latest appearances and behind-the-scenes activities.", url:fanTarget, label:"Explore ongoing activities"}
   ] : [
     {no:"01", eyebrow:"WATCH", title:"講談を、観に行く。", copy:"はじめての方も歓迎。公演の日時や会場、予約方法はこちらから。", url:"#stage", label:"公演一覧・ご予約"},
-    {no:"02", eyebrow:"INVITE", title:"講談師を、呼んでみる。", copy:"文化施設・学校・企業・地域の催し、講演や共演企画のご相談も。", url:"#contact", label:"出演・講演のご相談"},
+    {no:"02", eyebrow:"INVITE", title:"講談師を、呼んでみる。", copy:"文化施設・学校・企業・地域の催し、講演や共演企画のご相談も。", url:"#invite", label:"出演・講演のご相談"},
     {no:"03", eyebrow:"FOLLOW", title:"南不二の、いまを知る。", copy:"高座の舞台裏や日々の活動、これからの挑戦を追いかける。", url:fanTarget, label:"日々の活動を見る"}
   ];
   const cardsMarkup = threeCards.map(card => (
@@ -66,7 +67,7 @@ function threePillarEnhancements(html, path) {
     const labelFollow = en ? "Follow" : "活動を見る";
     const newDock = '<nav class="mf-dock mf-dock-three" aria-label="' + (en ? 'Quick access' : 'クイックメニュー') + '">' +
       '<a class="mf-dock-primary" href="#stage">' + labelBooking + '</a>' +
-      '<a class="mf-dock-shows" href="#contact">' + labelInquiry + '</a>' +
+      '<a class="mf-dock-shows" href="#invite">' + labelInquiry + '</a>' +
       '<a class="mf-dock-shows" href="' + fanTarget + '">' + labelFollow + '</a>' +
       '</nav>';
     html = html.replace(/<nav class="mf-dock"[\s\S]*?<\/nav>/,newDock);
@@ -79,6 +80,24 @@ export default function upgradeHomepage(html,path) {
   // メディア掲載（worker.js の MEDIA）。下の層の置換に巻き込まれないよう、最後のこの層で差し込む
   if (!html.includes('id="media"')) html = html.replace('<section class="contact" id="contact">', () => mediaSectionMarkup() + '\n  <section class="contact" id="contact">');
   if (!html.includes('id="invite"')) html = html.replace('<section class="contact" id="contact">', () => inviteSectionMarkup() + '\n  <section class="contact" id="contact">');
+  // 上部メニューの「出演依頼」は「こんな場にお呼びください」欄へ（欄の中のボタンからお問い合わせへ進む）
+  html = html.replace(/<a href="#contact"( data-ja="出演依頼")/g, '<a href="#invite"$1');
+  // ページ内リンクで飛んだあと、画像の読み込みなどで位置がずれても見出しの位置に合わせ直す
+  html = html.replace("</body>", () => `<script id="mf-anchor-realign">
+(function(){
+  function header(){var h=document.querySelector("header");return h?h.getBoundingClientRect().height:0}
+  function align(id){var el=document.getElementById(id);if(!el)return;var y=el.getBoundingClientRect().top+window.pageYOffset-header()-8;window.scrollTo({top:Math.max(0,y),behavior:"auto"})}
+  document.addEventListener("click",function(e){
+    var a=e.target.closest&&e.target.closest('a[href^="#"]');if(!a)return;
+    var id=a.getAttribute("href").slice(1);if(!id||!document.getElementById(id))return;
+    e.preventDefault();
+    if(history.pushState)history.pushState(null,"","#"+id);
+    align(id);[250,700,1400].forEach(function(t){setTimeout(function(){align(id)},t)});
+  });
+  if(location.hash){var id=location.hash.slice(1);window.addEventListener("load",function(){align(id);setTimeout(function(){align(id)},500)})}
+})();
+</script>
+</body>`);
   const en = path !== "/";
   // The same original photo as the desktop background, rendered at its natural
   // aspect ratio on phones so the head is never cropped by background-cover.
