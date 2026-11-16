@@ -132,6 +132,7 @@ export default {
     html = html.replace(/(<div class="eyebrow">THE STORYTELLER<\/div>[\s\S]*?<\/div>\s*)<p [^>]*>[\s\S]*?<\/p>/,
       '$1<div class="mf-profile-lead">' +
         '<p class="mf-lead-1" data-ja="17歳、吉本伝馬町劇場にて漫才師として初舞台。" data-en="At 17, a stage debut as a manzai comedian at Yoshimoto&#39;s Denmachō Theater.">17歳、吉本伝馬町劇場にて漫才師として初舞台。</p>' +
+        '<p class="mf-lead-2" data-ja="吉本興業・東京NSC1期生。" data-en="A member of the first class of Yoshimoto&#39;s Tokyo NSC comedy school.">吉本興業・東京NSC1期生。</p>' +
         '<p data-ja="笑いを追い、教壇に立ち、自ら事業を興す。そして、講談の高座へ。" data-en="Chasing laughter, standing at the lectern, building his own business — and then, to the kōdan stage.">笑いを追い、教壇に立ち、自ら事業を興す。そして、講談の高座へ。</p>' +
         '<p class="mf-lead-3" data-ja="遠回りこそが、この芸の原点。" data-en="The long way around is where this art begins.">遠回りこそが、この芸の原点。</p>' +
         '</div>');
