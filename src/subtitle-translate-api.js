@@ -197,6 +197,7 @@ Reply with JSON only: {"items":[{"ja":"...","yomi":"...","confusions":["..."],"r
 // 講談の台本ツール — POST /subtitles/api/script
 //  kind "lines"   : { lines:[ja…最大20], target:"en"|"zh", prev:[{ja,en}], synopsis, glossary } → { lines:[…] }
 //  kind "synopsis": { text, target } → { title, synopsis, characters:[{name, note}] }
+//  kind "terms"   : { text } → { terms:[{ja, yomi, en}] }（/subtitles/en/ の用語集づくり）
 // 台本を読み込んだときに1回だけ使う（本番中は使わない）。
 const SCRIPT_MODEL = "@cf/meta/llama-3.3-70b-instruct-fp8-fast";
 const TARGET_NAME = { en: "natural English", zh: "Traditional Chinese as used in Taiwan (繁體中文)" };
@@ -232,8 +233,32 @@ Reply with JSON only: {"title":"...","synopsis":"...","characters":[{"name":"...
     });
   }
 
+  // kind "terms": { text } → { terms:[{ja, yomi, en}] }
+  // 講談 英語字幕（/subtitles/en/）用：ライブ翻訳でまちがえやすい用語（人名・地名・時代の言葉など）と、その読み・英語を拾う
+  if (body.kind === "terms") {
+    const text = clean(body.text, 9000);
+    if (!text) return json({ error: "empty" }, 400);
+    const system =
+`You prepare a glossary for live English subtitles of a Japanese kōdan (traditional storytelling) performance.
+From the script, list the terms that live machine translation or speech recognition is likely to get wrong:
+people's names, place names, titles and ranks, period-specific words, kōdan-specific words, and words with unusual readings.
+For each term:
+- "ja": exactly as written in the script (no reading added)
+- "yomi": its reading in hiragana as used in this story
+- "en": the English to use in subtitles (romanize names, e.g. Magaki Heikurō; for other terms a short natural English word or phrase)
+At most 60 terms, most important first. Do not include ordinary everyday words.
+Reply with JSON only: {"terms":[{"ja":"...","yomi":"...","en":"..."}]}`;
+    const r = await runLLM(env, model, [{ role: "system", content: system }, { role: "user", content: "Script:\n" + text }], 2500, 50000);
+    const d = parseJsonLoose(r.text);
+    if (!d || !Array.isArray(d.terms)) return json({ error: "failed", detail: r.error || "unparsable" }, 502);
+    const seen = new Set();
+    const terms = d.terms.map(t => ({ ja: clean(t && t.ja, 20).replace(/[（(].*$/, "").trim(), yomi: clean(t && t.yomi, 30), en: clean(t && t.en, 60) }))
+      .filter(t => t.ja && t.en && text.includes(t.ja) && !seen.has(t.ja) && seen.add(t.ja)).slice(0, 60);
+    return json({ terms });
+  }
+
   // kind "lines"
-  const lines = (Array.isArray(body.lines) ? body.lines : []).slice(0, 20).map(l => clean(l, 200));
+  const lines =(Array.isArray(body.lines) ? body.lines : []).slice(0, 20).map(l => clean(l, 200));
   if (!lines.length || lines.every(l => !l)) return json({ error: "empty" }, 400);
   const prev = (Array.isArray(body.prev) ? body.prev : []).slice(-4).map(p => ({ ja: clean(p && p.ja, 200), tr: clean(p && p.tr, 300) })).filter(p => p.ja);
   const glossary = (Array.isArray(body.glossary) ? body.glossary : []).slice(0, 60)
