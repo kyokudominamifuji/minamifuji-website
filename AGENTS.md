@@ -39,6 +39,7 @@ seo-title-worker → seo-worker → profile-photo-worker → site-worker → cha
 | `/subtitles/iga` | iga-subtitles.js | 講談ライブ字幕スタジオ（本人用）。**非公開のまま** |
 | `/subtitles/class` `/subtitles/m` | class-subtitles*.js | 授業ライブ字幕（PC版・スマホ版） |
 | `/subtitles/kodan` | kodan-subtitles.js | 講談ライブ字幕（練習モードつき）。①台本→②練習（台本と字幕を比べてまちがいを自動で見つける）→③本番 |
+| `/subtitles/en` | kodan-en-subtitles.js | 講談 英語字幕（英語のみ・シンプル版）。①台本→②事前に英訳→③本番は音声で台本の位置を追って訳済みの英文を出す。台本にない言葉は内蔵翻訳でその場で訳す |
 | `/subtitles/api/translate` | subtitle-translate-api.js | Workers AI で翻訳。**利用回数に応じて費用がかかる** |
 | `/subtitles/api/homophones` | subtitle-translate-api.js | 原稿の用語だけ、音声認識の聞き間違い候補を Workers AI で調べる（原稿読込時のみ） |
 | `/subtitles/api/script` | subtitle-translate-api.js | 講談の台本を行ごとに英訳・中訳、あらすじ作成（台本読込時のみ。本番中は使わない） |
